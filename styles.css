@@ -1,0 +1,74 @@
+#southAmerica {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid;
+    border-color: red;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#brazil {
+    border: 1px solid;
+}
+
+#brazil img {
+    margin: 10px;
+}
+
+#bolivia {
+    border: 1px solid;
+}
+
+#argentina {
+    border: 1px solid;
+}
+
+.countries {
+    margin: 15px 40px;
+    padding: 60px;
+    position: relative;
+}
+
+#bolivia img:hover {
+    -webkit-filter: drop-shadow(2px 2px 0 yellow)
+                drop-shadow(-2px 2px 0 yellow)
+                drop-shadow(2px -2px 0 yellow)
+                drop-shadow(-2px -2px 0 yellow);
+
+    filter: drop-shadow(2px 2px 0 yellow)
+        drop-shadow(-2px 2px 0 yellow)
+        drop-shadow(2px -2px 0 yellow)
+        drop-shadow(-2px -2px 0 yellow);
+}
+
+.countries img:hover {
+    -webkit-filter: drop-shadow(2px 2px 0 black)
+                drop-shadow(-2px 2px 0 black)
+                drop-shadow(2px -2px 0 black)
+                drop-shadow(-2px -2px 0 black);
+
+    filter: drop-shadow(2px 2px 0 black)
+            drop-shadow(-2px 2px 0 black)
+            drop-shadow(2px -2px 0 black)
+            drop-shadow(-2px -2px 0 black);
+}
+
+
+/* Centered text */
+.centered-troop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 23pt;
+}
+
+#bottomRow {
+    padding: 20px;
+    font: 40pt Arial;
+    text-align: center;
+}
+
+#bolivia-troop {
+    color: purple;
+}

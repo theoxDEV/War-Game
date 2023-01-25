@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div id="container">
+
+        <!--SOUTH AMERICA-->
+        <div id="southAmerica">
+            <div id="brazil" class="countries">
+                <img src="images/countries/brazil.png" onclick="attack(brazilTroop, argentinaTroop)">
+                <div id="brazil-troop" class="centered-troop">
+                    <span>3</span>
+                </div>
+                <span></span>
+            </div>
+
+            <div id="argentina" class="countries">
+                <img src="images/countries/argentina.png" onclick="attack()">
+                <div id="argentina-troop" class="centered-troop">
+                    <span>1</span>
+                </div>
+            </div>
+
+            <div id="bolivia" class="countries">
+                <img src="images/countries/bolivia.png">
+                <div id="bolivia-troop" class="centered-troop">Centered</div>
+            </div>
+        </div>
+
+        <div id="bottomRow">
+            <h1>Welcome to War Game!</h1>
+            <p>You are Brazil against the whole South America</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
