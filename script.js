@@ -2,45 +2,52 @@
 
 var brazilTroop = document.getElementById('brazil-troop-number');
 var argentinaTroop = document.getElementById('argentina-troop-number');
-
-
+var boliviaTroop = document.getElementById('bolivia-troop-number');
 
 function attack(attacker, defender) {
-    // Substitute to parameter after
+    //Substitute to parameter after
+    //brazilTroop attack
+    //argentinaTroop defense
+    //if(attacker == 1) { return {"You cannot attack"}};
     let attackerDiceList = diceResults(brazilTroop.textContent);
     let defenderDiceList = diceResults(argentinaTroop.textContent);
 
-    battle(attackerDiceList, defenderDiceList);
+    var battleResult = battle(attackerDiceList, defenderDiceList);
 
-    console.log(battle(attackerDiceList, defenderDiceList));
+    console.log(battleResult);
+
+    //Attack cannot lost all of the troops
+    if(brazilTroop.textContent - battleResult.attackLostedTroops == 0){
+        brazilTroop.textContent = 1;
+    }
+
+    argentinaTroop.textContent -= battleResult.defenseLostedTroops;
 }
 
+
 function battle(attackList, defenseList) {
-    var attackResult;
-    var defenseResult;
+    var attackLostedTroops = 0;
+    var defenseLostedTroops = 0;
 
     let attackListSortByDesc = attackList.sort(function(a, b){return b-a});
     let defenseListSortByDesc = defenseList.sort(function(a, b){return b-a});
 
-    console.log(defenseListSortByDesc);
+    for(let i=0; i < defenseListSortByDesc.length; i++){
 
-
-    for(let i=0; i < attackListSortByDesc.length; i++){
-        
         //Defense victory
         if(defenseListSortByDesc[i] >= attackListSortByDesc[i]){
-            attackResult += 1;
+            attackLostedTroops += 1;
         } 
         
         //Attack victory
         else {
-            defenseResult += 1;
+            defenseLostedTroops += 1;
         }
     }
 
     return {
-        attack: attackResult,
-        defense: defenseResult
+        attackLostedTroops,
+        defenseLostedTroops
     };
 
 }

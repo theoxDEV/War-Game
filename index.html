@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>War Game</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
         <!--SOUTH AMERICA-->
         <div id="southAmerica">
             <div id="brazil" class="countries">
-                <img src="images/countries/brazil.png" onclick="attack(brazilTroop, argentinaTroop)">
+                <img src="images/countries/brazil.png" onclick="attack()">
                 <div id="brazil-troop" class="centered-troop">
                     <span id="brazil-troop-number">3</span>
                 </div>
@@ -23,13 +23,15 @@
             <div id="argentina" class="countries">
                 <img src="images/countries/argentina.png" onclick="attack()">
                 <div id="argentina-troop" class="centered-troop">
-                    <span id="argentina-troop-number">1</span>
+                    <span id="argentina-troop-number">3</span>
                 </div>
             </div>
 
             <div id="bolivia" class="countries">
                 <img src="images/countries/bolivia.png">
-                <div id="bolivia-troop" class="centered-troop">Centered</div>
+                <div id="bolivia-troop" class="centered-troop" onclick="attack()">
+                    <span id="argentina-troop-number">30</span>
+                </div>
             </div>
         </div>
 
