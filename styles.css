@@ -1,18 +1,13 @@
 #southAmerica {
-    display: flex;
-    flex-direction: row;
     border: 1px solid;
     border-color: red;
     justify-content: center;
     align-items: flex-end;
+    display: inline-block
 }
 
 #brazil {
     border: 1px solid;
-}
-
-#brazil img {
-    margin: 10px;
 }
 
 #bolivia {
@@ -24,12 +19,12 @@
 }
 
 .countries {
-    margin: 15px 40px;
-    padding: 60px;
-    position: relative;
+    position: absolute;
+    overflow: hidden;
+    object-fit: cover;
 }
 
-#bolivia img:hover {
+#venezuela img:hover {
     -webkit-filter: drop-shadow(2px 2px 0 yellow)
                 drop-shadow(-2px 2px 0 yellow)
                 drop-shadow(2px -2px 0 yellow)
