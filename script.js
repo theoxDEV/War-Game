@@ -14,8 +14,6 @@ function attack(attacker, defender) {
 
     var battleResult = battle(attackerDiceList, defenderDiceList);
 
-    console.log(battleResult);
-
     //Attack cannot lost all of the troops
     if(brazilTroop.textContent - battleResult.attackLostedTroops == 0){
         brazilTroop.textContent = 1;
