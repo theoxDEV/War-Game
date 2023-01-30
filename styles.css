@@ -24,18 +24,6 @@
     object-fit: cover;
 }
 
-#venezuela img:hover {
-    -webkit-filter: drop-shadow(2px 2px 0 yellow)
-                drop-shadow(-2px 2px 0 yellow)
-                drop-shadow(2px -2px 0 yellow)
-                drop-shadow(-2px -2px 0 yellow);
-
-    filter: drop-shadow(2px 2px 0 yellow)
-        drop-shadow(-2px 2px 0 yellow)
-        drop-shadow(2px -2px 0 yellow)
-        drop-shadow(-2px -2px 0 yellow);
-}
-
 .countries img:hover {
     -webkit-filter: drop-shadow(2px 2px 0 black)
                 drop-shadow(-2px 2px 0 black)
