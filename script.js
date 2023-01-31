@@ -3,23 +3,63 @@
 var brazilTroop = document.getElementById('brazil-troop-number');
 var argentinaTroop = document.getElementById('argentina-troop-number');
 var boliviaTroop = document.getElementById('bolivia-troop-number');
+var countryHasBeenClicked = false;
+var countriesBattle = [];
+
+
+//Attack and move defender army:
+//attacker country has to have a border with defender country
+$(".countries").click(function(e) {
+    countriesBattle.push(this);
+    
+    if(countryHasBeenClicked) {
+        countriesBattle.push(this);
+        attack(countriesBattle[0], this);
+        
+        //Remove all of countries of countriesBattle
+        while(countriesBattle.length){
+            countriesBattle.pop();
+        }
+
+        //Finish attack deselecting the attack country
+        //And turn countryHasBeenClicked to false
+        countryHasBeenClicked = false;
+    }
+    
+    else {
+        countryHasBeenClicked = true;
+    }
+});
+
+
 
 function attack(attacker, defender) {
     //Substitute to parameter after
     //brazilTroop attack
     //argentinaTroop defense
-    //if(attacker == 1) { return {"You cannot attack"}};
-    let attackerDiceList = diceResults(brazilTroop.textContent);
-    let defenderDiceList = diceResults(argentinaTroop.textContent);
+    //if(attackerTroops == 1) { return "You cannot attack"};
+    //Attacker
+    let attackerId = attacker.id;
+    let attackerTroops = document.getElementById(attackerId + '-troop-number');
+
+    //Defense
+    let defenseId = defender.id;
+    let defenseTroops = document.getElementById(defenseId + '-troop-number');
+
+
+    let attackerDiceList = diceResults(attackerTroops.textContent);
+    let defenderDiceList = diceResults(defenseTroops.textContent);
 
     var battleResult = battle(attackerDiceList, defenderDiceList);
 
     //Attack cannot lost all of the troops
-    if(brazilTroop.textContent - battleResult.attackLostedTroops == 0){
-        brazilTroop.textContent = 1;
+    if(attackerTroops.textContent - battleResult.attackLostedTroops == 0){
+        attackerTroops.textContent = 1;
+    }else {
+        attackerTroops.textContent -= battleResult.attackLostedTroops;
     }
 
-    argentinaTroop.textContent -= battleResult.defenseLostedTroops;
+    defenseTroops.textContent -= battleResult.defenseLostedTroops;
 }
 
 
