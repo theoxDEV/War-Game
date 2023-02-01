@@ -1,8 +1,6 @@
 //Global variables
 
-var brazilTroop = document.getElementById('brazil-troop-number');
-var argentinaTroop = document.getElementById('argentina-troop-number');
-var boliviaTroop = document.getElementById('bolivia-troop-number');
+var southAmericaDiv = document.getElementById('southAmerica'); 
 var countryHasBeenClicked = false;
 var countriesBattle = [];
 
@@ -37,29 +35,42 @@ function attack(attacker, defender) {
     //Substitute to parameter after
     //brazilTroop attack
     //argentinaTroop defense
-    //if(attackerTroops == 1) { return "You cannot attack"};
+    //if(attackerTroopsSpanId == 1) { return "You cannot attack"};
     //Attacker
     let attackerId = attacker.id;
-    let attackerTroops = document.getElementById(attackerId + '-troop-number');
+    let attackerTroopsSpanId = document.getElementById(attackerId + '-troop-number');
 
     //Defense
     let defenseId = defender.id;
-    let defenseTroops = document.getElementById(defenseId + '-troop-number');
+    let defenseTroopsSpanId = document.getElementById(defenseId + '-troop-number');
 
-
-    let attackerDiceList = diceResults(attackerTroops.textContent);
-    let defenderDiceList = diceResults(defenseTroops.textContent);
+    //Call Dice function
+    let attackerDiceList = diceResults(attackerTroopsSpanId.textContent);
+    let defenderDiceList = diceResults(defenseTroopsSpanId.textContent);
 
     var battleResult = battle(attackerDiceList, defenderDiceList);
 
     //Attack cannot lost all of the troops
-    if(attackerTroops.textContent - battleResult.attackLostedTroops == 0){
-        attackerTroops.textContent = 1;
+    if(attackerTroopsSpanId.textContent - battleResult.attackLostedTroops == 0){
+        attackerTroopsSpanId.textContent = 1;
     }else {
-        attackerTroops.textContent -= battleResult.attackLostedTroops;
-    }
+        $("#" + attackerTroopsSpanId.id).addClass("animated shake");
+        attackerTroopsSpanId.textContent -= battleResult.attackLostedTroops;
 
-    defenseTroops.textContent -= battleResult.defenseLostedTroops;
+    }
+    
+    $("#" + defenseTroopsSpanId.id).addClass("animated shake");
+    defenseTroopsSpanId.textContent -= battleResult.defenseLostedTroops;
+
+    //Setting timeout 'cause before of this implementation, class "animated shake" was removed
+    //before the animation occurs
+    setTimeout(function() {
+        $("#" + attackerTroopsSpanId.id).removeClass("animated shake");
+        //$("#" + attackerTroopsSpanId.id).innerHtml = battleResult.attackLostedTroops;
+        
+        $("#" + defenseTroopsSpanId.id).removeClass("animated shake");
+        //attackerTroopsSpanId.innerHtml = battleResult.defenseLostedTroops;
+    }, 2000);
 }
 
 
