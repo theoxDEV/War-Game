@@ -36,13 +36,18 @@ function attack(attacker, defender) {
     //brazilTroop attack
     //argentinaTroop defense
     //if(attackerTroopsSpanId == 1) { return "You cannot attack"};
+    //Cannot attack same color
     //Attacker
-    let attackerId = attacker.id;
-    let attackerTroopsSpanId = document.getElementById(attackerId + '-troop-number');
+    let attackerCountryName = attacker.id;
+    let attackerTroopsSpanId = document.getElementById(attackerCountryName + '-troop-number');
+    let attackerDiv = document.getElementById(`${attackerCountryName}`);
+    let attackerImage = attackerDiv.getElementsByTagName('img');
 
     //Defense
-    let defenseId = defender.id;
-    let defenseTroopsSpanId = document.getElementById(defenseId + '-troop-number');
+    let defenseCountryName = defender.id;
+    let defenseTroopsSpanId = document.getElementById(defenseCountryName + '-troop-number');
+    let defenseDiv = document.getElementById(`${defenseCountryName}`);
+    let defenseImage = defenseDiv.getElementsByTagName('img');
 
     //Call Dice function
     let attackerDiceList = diceResults(attackerTroopsSpanId.textContent);
@@ -53,14 +58,23 @@ function attack(attacker, defender) {
     //Attack cannot lost all of the troops
     if(attackerTroopsSpanId.textContent - battleResult.attackLostedTroops == 0){
         attackerTroopsSpanId.textContent = 1;
-    }else {
+    }
+    
+    else {
         $("#" + attackerTroopsSpanId.id).addClass("animated shake");
         attackerTroopsSpanId.textContent -= battleResult.attackLostedTroops;
-
     }
+    
     
     $("#" + defenseTroopsSpanId.id).addClass("animated shake");
     defenseTroopsSpanId.textContent -= battleResult.defenseLostedTroops;
+    console.log(defenseTroopsSpanId.textContent);
+
+    //If defense lost all of troops
+    if(defenseTroopsSpanId.textContent == 0) {
+        let change = changeCountryColor(attackerImage[0], defenseImage[0]);
+        console.log(change);
+    }
 
     //Setting timeout 'cause before of this implementation, class "animated shake" was removed
     //before the animation occurs
@@ -70,7 +84,7 @@ function attack(attacker, defender) {
         
         $("#" + defenseTroopsSpanId.id).removeClass("animated shake");
         //attackerTroopsSpanId.innerHtml = battleResult.defenseLostedTroops;
-    }, 2000);
+    }, 1200);
 }
 
 
@@ -118,4 +132,12 @@ function diceResults(troopsQuantity) {
     }
 
     return playerDiceList;
+}
+
+function changeCountryColor(attacker, defender) {
+    let colorToChange = attacker.className;
+
+    //Same function in start-game script
+    //To-do function => () = changeCountrySrcImage
+    defender.src = `images/countries/${defender.alt}-${colorToChange}.png`;
 }
