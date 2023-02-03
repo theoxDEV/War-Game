@@ -1,0 +1,23 @@
+{
+  "name": "war-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start-game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theoxDEV/War-Game.git"
+  },
+  "author": "Matheus Nascimento",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theoxDEV/War-Game/issues"
+  },
+  "homepage": "https://github.com/theoxDEV/War-Game#readme",
+  "dependencies": {
+    "socket.io": "^4.5.4"
+  },
+  "type": "module"
+}
