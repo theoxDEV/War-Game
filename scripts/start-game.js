@@ -25,11 +25,10 @@ function changeColors(playerColor, countryImageElement, countryName) {
 }
 
 //Continents
-var southAmericaCountriesImgs = document.getElementById('southAmerica').getElementsByTagName('img');
+var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByTagName('img');
 
 //Distribute players on the board
 for (let countryImgElement of southAmericaCountriesImgs) {
-    let countryName = countryImgElement.alt;
 
     //Add random territories to start game
     let countryRandomStartColor = getRandomItem(playersColors);
