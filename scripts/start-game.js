@@ -1,10 +1,3 @@
-//Blue 
-//Green
-//Yellow
-//Gray
-//Purple
-//Red
-
 //Socket io client side
 const socket = io('http://localhost:3000');
 
@@ -20,36 +13,29 @@ var playersQuantity = 6;
 var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
 
 
-
 $(document).ready(function() {
-        
-    $("#brazil img").hover(function(){ $(this).toggleClass('hover-class'); });
+    //Hover settings
+    $(".countries-images").hover(function(){ $(this).toggleClass('cn'); });
 });
 
-function changeColors(playerColor, countryName) {
-
-    //GET ROOT CODE
-    let root = document.querySelector(':root');
-    
-    //root.style.setProperty('--countrycolor', `var(--${playerColor})`);
-
-    console.log(countryName);
-
-    //filter: var(--countrycolor);
+function changeColors(playerColor, countryImageElement, countryName) {
+    //Change country image filter to new color
+    //Can be use after attack success
+    countryImageElement.style.filter = `var(--${playerColor})`;
 }
 
 //Continents
-var southAmericaCountriesImgs = document.getElementById('southAmerica').getElementsByTagName('img');
+var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByTagName('img');
 
 //Distribute players on the board
 for (let countryImgElement of southAmericaCountriesImgs) {
-    let countryName = countryImgElement.alt;
 
+    //Add random territories to start game
     let countryRandomStartColor = getRandomItem(playersColors);
     //Add color to img class
     countryImgElement.classList.add(`${countryRandomStartColor}`);
 
-    changeColors(countryRandomStartColor, countryName);
+    changeColors(countryRandomStartColor, countryImgElement);
 }
 
 // program to get a random item from an array
