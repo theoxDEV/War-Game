@@ -1,3 +1,5 @@
+import { changeColors } from './change-country-color.js';
+
 //Socket io client side
 const socket = io('http://localhost:3000');
 
@@ -18,24 +20,17 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('cn'); });
 });
 
-function changeColors(playerColor, countryImageElement, countryName) {
-    //Change country image filter to new color
-    //Can be use after attack success
-    countryImageElement.style.filter = `var(--${playerColor})`;
-}
-
 //Continents
-var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByTagName('img');
+//var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
+var southAmericaCountriesImgs = document.getElementsByClassName('countries-images');
 
 //Distribute players on the board
 for (let countryImgElement of southAmericaCountriesImgs) {
 
     //Add random territories to start game
     let countryRandomStartColor = getRandomItem(playersColors);
-    //Add color to img class
-    countryImgElement.classList.add(`${countryRandomStartColor}`);
 
-    changeColors(countryRandomStartColor, countryImgElement);
+    changeColors(countryImgElement, countryRandomStartColor);
 }
 
 // program to get a random item from an array
