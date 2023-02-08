@@ -1,3 +1,5 @@
+import { changeColors } from './change-country-color.js';
+
 //Socket io client side
 const socket = io('http://localhost:3000');
 
@@ -17,13 +19,6 @@ $(document).ready(function() {
     //Hover settings
     $(".countries-images").hover(function(){ $(this).toggleClass('cn'); });
 });
-
-function changeColors(countryImgElement, countryRandomStartColor) {
-    //Change country image filter to new color
-    //Can be use after attack success
-    //Add color to img class
-    countryImgElement.classList.add(`${countryRandomStartColor}`);
-}
 
 //Continents
 var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');

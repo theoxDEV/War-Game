@@ -1,3 +1,4 @@
+import { changeColors } from './change-country-color.js';
 //Global variables
 
 var southAmericaDiv = document.getElementById('southAmerica'); 
@@ -38,16 +39,15 @@ function attack(attacker, defender) {
     //if(attackerTroopsSpanId == 1) { return "You cannot attack"};
     //Cannot attack same color
     //Attacker
+    console.log(attacker.id, defender.id);
     let attackerCountryName = attacker.id;
     let attackerTroopsSpanId = document.getElementById(attackerCountryName + '-troop-number');
-    let attackerDiv = document.getElementById(`${attackerCountryName}`);
-    let attackerImage = attackerDiv.getElementsByTagName('img');
+    let attackerImage = document.getElementById(`${attackerCountryName}`);
 
     //Defense
     let defenseCountryName = defender.id;
     let defenseTroopsSpanId = document.getElementById(defenseCountryName + '-troop-number');
-    let defenseDiv = document.getElementById(`${defenseCountryName}`);
-    let defenseImage = defenseDiv.getElementsByTagName('img');
+    let defenseImage = document.getElementById(`${defenseCountryName}`);
 
     //Call Dice function
     let attackerDiceList = diceResults(attackerTroopsSpanId.innerHTML);
@@ -71,8 +71,7 @@ function attack(attacker, defender) {
 
     //If defense lost all of troops
     if(defenseTroopsSpanId.innerHTML == 0) {
-        let change = changeCountryColor(attackerImage[0], defenseImage[0]);
-        console.log(change);
+        changeColors(defenseImage, attackerImage.classList[1]);
     }
 
     //Setting timeout 'cause before of this implementation, class "animated shake" was removed
