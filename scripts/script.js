@@ -7,7 +7,7 @@ var countriesBattle = [];
 
 //Attack and move defender army:
 //attacker country has to have a border with defender country
-$(".countries").click(function(e) {
+$(".countries-images").click(function(e) {
     countriesBattle.push(this);
     
     if(countryHasBeenClicked) {
@@ -50,28 +50,27 @@ function attack(attacker, defender) {
     let defenseImage = defenseDiv.getElementsByTagName('img');
 
     //Call Dice function
-    let attackerDiceList = diceResults(attackerTroopsSpanId.textContent);
-    let defenderDiceList = diceResults(defenseTroopsSpanId.textContent);
+    let attackerDiceList = diceResults(attackerTroopsSpanId.innerHTML);
+    let defenderDiceList = diceResults(defenseTroopsSpanId.innerHTML);
 
     var battleResult = battle(attackerDiceList, defenderDiceList);
 
     //Attack cannot lost all of the troops
-    if(attackerTroopsSpanId.textContent - battleResult.attackLostedTroops == 0){
-        attackerTroopsSpanId.textContent = 1;
+    if(attackerTroopsSpanId.innerHTML - battleResult.attackLostedTroops == 0){
+        attackerTroopsSpanId.innerHTML = 1;
     }
     
     else {
         $("#" + attackerTroopsSpanId.id).addClass("animated shake");
-        attackerTroopsSpanId.textContent -= battleResult.attackLostedTroops;
+        attackerTroopsSpanId.innerHTML -= battleResult.attackLostedTroops;
     }
     
     
     $("#" + defenseTroopsSpanId.id).addClass("animated shake");
-    defenseTroopsSpanId.textContent -= battleResult.defenseLostedTroops;
-    console.log(defenseTroopsSpanId.textContent);
+    defenseTroopsSpanId.innerHTML -= battleResult.defenseLostedTroops;
 
     //If defense lost all of troops
-    if(defenseTroopsSpanId.textContent == 0) {
+    if(defenseTroopsSpanId.innerHTML == 0) {
         let change = changeCountryColor(attackerImage[0], defenseImage[0]);
         console.log(change);
     }
@@ -132,12 +131,4 @@ function diceResults(troopsQuantity) {
     }
 
     return playerDiceList;
-}
-
-function changeCountryColor(attacker, defender) {
-    let colorToChange = attacker.className;
-
-    //Same function in start-game script
-    //To-do function => () = changeCountrySrcImage
-    defender.src = `images/countries/${defender.alt}-${colorToChange}.png`;
 }

@@ -35,8 +35,29 @@ body {
    filter: var(---hover-Filter-Settings);
 }
 
-#Venezuela {
-  fill:red;
+/* COLORS CLASSES*/
+.green {
+  fill: #50C878;
+}
+
+.blue {
+  fill: #00FFFF;
+}
+
+.red {
+  fill: #FF0000	;
+}
+
+.purple {
+  fill: #800080;
+}
+
+.yellow {
+  fill: #FFEA00;
+}
+
+.gray {
+  fill: #A9A9A9;
 }
 
 #Venezuela:hover {

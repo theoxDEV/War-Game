@@ -18,24 +18,23 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('cn'); });
 });
 
-function changeColors(playerColor, countryImageElement, countryName) {
+function changeColors(countryImgElement, countryRandomStartColor) {
     //Change country image filter to new color
     //Can be use after attack success
-    countryImageElement.style.filter = `var(--${playerColor})`;
+    //Add color to img class
+    countryImgElement.classList.add(`${countryRandomStartColor}`);
 }
 
 //Continents
-var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByTagName('img');
+var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
 
 //Distribute players on the board
 for (let countryImgElement of southAmericaCountriesImgs) {
 
     //Add random territories to start game
     let countryRandomStartColor = getRandomItem(playersColors);
-    //Add color to img class
-    countryImgElement.classList.add(`${countryRandomStartColor}`);
 
-    changeColors(countryRandomStartColor, countryImgElement);
+    changeColors(countryImgElement, countryRandomStartColor);
 }
 
 // program to get a random item from an array
