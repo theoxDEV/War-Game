@@ -21,7 +21,8 @@ $(document).ready(function() {
 });
 
 //Continents
-var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
+//var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
+var southAmericaCountriesImgs = document.getElementsByClassName('countries-images');
 
 //Distribute players on the board
 for (let countryImgElement of southAmericaCountriesImgs) {
