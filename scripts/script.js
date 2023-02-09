@@ -8,6 +8,8 @@ var countriesBattle = [];
 //Attack and move defender army:
 //attacker country has to have a border with defender country
 $(".countries-images").click(function(e) {
+    
+    //this.style['stroke-width'] = '7px';
     countriesBattle.push(this);
     
     if(countryHasBeenClicked) {

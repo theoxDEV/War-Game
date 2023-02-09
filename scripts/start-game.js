@@ -17,7 +17,7 @@ var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
 
 $(document).ready(function() {
     //Hover settings
-    $(".countries-images").hover(function(){ $(this).toggleClass('cn'); });
+    $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
 //Continents
