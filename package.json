@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/theoxDEV/War-Game#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "socket.io": "^4.5.4"
   },
   "type": "module"
