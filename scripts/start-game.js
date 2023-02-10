@@ -1,13 +1,7 @@
 import { changeColors } from './change-country-color.js';
-
-//Socket io client side
+//Establishing a connection with the server on port 5500y
 const socket = io('http://localhost:3000');
 
-socket.on('init', handleInit);
-
-function handleInit(mgs){
-    console.log(mgs);
-}
 
 //Global variables
 //Three players default
@@ -20,18 +14,24 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
-//Continents
-//var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
-var southAmericaCountriesImgs = document.getElementsByClassName('countries-images');
+socket.on('updatePlayers', players => {
+    //Continents
+    //var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
+    var allOfWorldCountriesImages = document.getElementsByClassName('countries-images');
 
-//Distribute players on the board
-for (let countryImgElement of southAmericaCountriesImgs) {
+    //Distribute players on the board
+    for (let countryImgElement of allOfWorldCountriesImages) {
 
-    //Add random territories to start game
-    let countryRandomStartColor = getRandomItem(playersColors);
+        //Add random territories to start game
+        let countryRandomStartColor = getRandomItem(playersColors);
 
-    changeColors(countryImgElement, countryRandomStartColor);
-}
+        console.log("Cor gerada: " + countryRandomStartColor);
+
+        changeColors(countryImgElement, countryRandomStartColor);
+    }
+
+})
+
 
 // program to get a random item from an array
 function getRandomItem(arr) {

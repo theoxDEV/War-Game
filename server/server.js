@@ -1,4 +1,4 @@
-import { createServer } from "http";
+import { createServer } from "node:http";
 import { Server } from "socket.io";
 import express from 'express';
 
@@ -16,18 +16,24 @@ const io = new Server(httpServer, {
     res.send('Hello world');
   });
 
+let players = [];
+
 
 io.on('connection', (socket) => {
-    socket.on('clientToServer', (data) => {
-        console.log('a user connected');
-        console.log(data);
+    socket.on('newPlayer', (data) => {
+        console.log('user connected');
+        console.log(players);
+        players[socket.id] = data;
+        io.emit('updatePlayers', players);
     });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        delete players[socket.id];
+        io.emit('updatePlayers', players);
+    
+        socket.emit('serverToClient', `${socket.id}`);
     });
 
-    socket.emit('serverToClient', 'Hello client');
 });
 
 httpServer.listen(3000, () => {
