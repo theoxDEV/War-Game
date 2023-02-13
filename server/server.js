@@ -17,21 +17,42 @@ const io = new Server(httpServer, {
   });
 
 let players = [];
+let roomExists = false;
+let roomId;
 
 
 io.on('connection', (socket) => {
-    socket.on('newPlayer', (data) => {
-        console.log('user connected');
-        console.log(players);
+
+    socket.on('newPlayer', data => {
+        console.log("New client connected, with id: " + socket.id);
         players[socket.id] = data;
+
+        //Join test room when connect
+        if(roomExists) {
+            socket.join(roomId);
+            console.log(roomId);
+        }
+        
         io.emit('updatePlayers', players);
     });
 
-    socket.on('disconnect', () => {
-        delete players[socket.id];
-        io.emit('updatePlayers', players);
-    
-        socket.emit('serverToClient', `${socket.id}`);
+    if(!roomExists) {   
+        socket.on('create', function(room) {
+            socket.join(room);
+            console.log("Room: " + room);
+            console.log("Players: " + players);
+            roomExists = true;
+            roomId = room;
+            io.to(roomId).emit('createMap');
+        });
+    }
+
+    socket.on('disconnect', (reason) => {
+        if (reason === "io server disconnect") {
+            // the disconnection was initiated by the server, you need to reconnect manually
+            socket.connect();
+          }
+          // else the socket will automatically try to reconnect
     });
 
 });

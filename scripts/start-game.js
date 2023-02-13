@@ -14,19 +14,20 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
-socket.on('updatePlayers', players => {
+socket.emit('create', 'room1');
+
+socket.on('createMap', () => {
+
     //Continents
     //var southAmericaCountriesImgs = document.getElementById('south-america').getElementsByClassName('countries-images');
     var allOfWorldCountriesImages = document.getElementsByClassName('countries-images');
-
+    
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
-
+    
         //Add random territories to start game
         let countryRandomStartColor = getRandomItem(playersColors);
-
-        console.log("Cor gerada: " + countryRandomStartColor);
-
+    
         changeColors(countryImgElement, countryRandomStartColor);
     }
 
