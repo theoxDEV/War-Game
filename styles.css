@@ -60,6 +60,28 @@
   fill: #A9A9A9;
 }
 
+/* User Welcome */
+
+#gameArea {
+  display: none;
+}
+
+#userName {
+  border-radius: 10px;
+  height: 150%;
+}
+
+#userForm {
+  height: 100vh;
+  text-align: center;
+  border: #00FFFF 1px solid;
+}
+
+#playerWelcome {
+  font-family: Verdana;
+  font-weight: bold;
+}
+
 #southAmerica {
     border: 1px solid;
     border-color: red;

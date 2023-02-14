@@ -5,6 +5,13 @@ import express from 'express';
 const app = express();
 const httpServer = createServer(app);
 
+let players = [];
+let roomExists = false;
+let roomId;
+
+let countriesImgList;
+let contriesColorList;
+
 //Adding CORS - https://socket.io/docs/v4/handling-cors/#cors-header-access-control-allow-origin-missing
 const io = new Server(httpServer, { 
     cors: {
@@ -16,24 +23,24 @@ const io = new Server(httpServer, {
     res.send('Hello world');
   });
 
-let players = [];
-let roomExists = false;
-let roomId;
-
-
 io.on('connection', (socket) => {
 
     socket.on('newPlayer', data => {
         console.log("New client connected, with id: " + socket.id);
         players[socket.id] = data;
+        socket.join(roomId);
 
-        //Join test room when connect
         if(roomExists) {
-            socket.join(roomId);
-            console.log(roomId);
+            io.emit('updateMap', {
+                colors: contriesColorList
+            });
         }
-        
-        io.emit('updatePlayers', players);
+    });
+
+    
+    socket.on('mapElements', data => {
+        countriesImgList = data.countries;
+        contriesColorList = data.colors;
     });
 
     if(!roomExists) {   
@@ -41,9 +48,12 @@ io.on('connection', (socket) => {
             socket.join(room);
             console.log("Room: " + room);
             console.log("Players: " + players);
+
+            //io.to(roomId).emit('createMap', roomExists);
+            io.emit('createMap', roomExists);
+            
             roomExists = true;
             roomId = room;
-            io.to(roomId).emit('createMap');
         });
     }
 
@@ -51,7 +61,9 @@ io.on('connection', (socket) => {
         if (reason === "io server disconnect") {
             // the disconnection was initiated by the server, you need to reconnect manually
             socket.connect();
-          }
+        }
+
+        io.to("room1").emit('serverToClient', socket.id);
           // else the socket will automatically try to reconnect
     });
 
