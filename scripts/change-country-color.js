@@ -4,7 +4,10 @@ function changeColors(countryImgElement, countryNewColor) {
     //Add color to img class
     let classList = countryImgElement.classList;
 
-    if(classList.length >= 2) {
+    console.log("Class list: " + classList);
+
+    if(classList.length >= 2 && countryNewColor != undefined) {
+        console.log(countryNewColor);
         //Verify if it's is an attack source
         classList.replace(classList[1], countryNewColor);
     }

@@ -1,10 +1,8 @@
 //Establishing a connection with the server on port 5500y
 const socket = io('http://localhost:3000');
 
-//Callback function fires on the event called 'serverToClient'
-socket.on('serverToClient', (data) => {
-    console.log("Player has disconnected: " + data);
-})
+const form = document.getElementById('userForm');
+const gameAreaDiv = document.getElementById('gameArea');
 
 const color = [
     "Red", "Blue", "Yellow", "Gray", "Green", "Purple"
@@ -25,3 +23,12 @@ socket.emit('newPlayer', {
 
 //Client sends a message at the moment it got connected with the server
 socket.emit('clientToServer', "Hello, server!");
+
+form.onsubmit = function(e) {
+    e.preventDefault();
+    form.style.display = 'none';
+    gameAreaDiv.style.display = 'block';
+    clientBalls[selfID].name = document.getElementById('userName').value;
+    socket.emit('clientName', clientBalls[selfID].name);
+    return false;
+}

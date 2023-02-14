@@ -5,6 +5,13 @@ import express from 'express';
 const app = express();
 const httpServer = createServer(app);
 
+let players = [];
+let roomExists = false;
+let roomId;
+
+let countriesImgList;
+let contriesColorList;
+
 //Adding CORS - https://socket.io/docs/v4/handling-cors/#cors-header-access-control-allow-origin-missing
 const io = new Server(httpServer, { 
     cors: {
@@ -16,22 +23,48 @@ const io = new Server(httpServer, {
     res.send('Hello world');
   });
 
-let players = [];
-
-
 io.on('connection', (socket) => {
-    socket.on('newPlayer', (data) => {
-        console.log('user connected');
-        console.log(players);
+
+    socket.on('newPlayer', data => {
+        console.log("New client connected, with id: " + socket.id);
         players[socket.id] = data;
-        io.emit('updatePlayers', players);
+        socket.join(roomId);
+
+        if(roomExists) {
+            io.emit('updateMap', {
+                colors: contriesColorList
+            });
+        }
     });
 
-    socket.on('disconnect', () => {
-        delete players[socket.id];
-        io.emit('updatePlayers', players);
     
-        socket.emit('serverToClient', `${socket.id}`);
+    socket.on('mapElements', data => {
+        countriesImgList = data.countries;
+        contriesColorList = data.colors;
+    });
+
+    if(!roomExists) {   
+        socket.on('create', function(room) {
+            socket.join(room);
+            console.log("Room: " + room);
+            console.log("Players: " + players);
+
+            //io.to(roomId).emit('createMap', roomExists);
+            io.emit('createMap', roomExists);
+            
+            roomExists = true;
+            roomId = room;
+        });
+    }
+
+    socket.on('disconnect', (reason) => {
+        if (reason === "io server disconnect") {
+            // the disconnection was initiated by the server, you need to reconnect manually
+            socket.connect();
+        }
+
+        io.to("room1").emit('serverToClient', socket.id);
+          // else the socket will automatically try to reconnect
     });
 
 });
