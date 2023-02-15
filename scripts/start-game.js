@@ -7,8 +7,6 @@ const socket = io('http://localhost:3000');
 //Three players default
 var playersQuantity = 6;
 var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
-var countriesImgList = [];
-var contriesColorList = [];
 var i = 0;
 
 var roomExists;
@@ -25,49 +23,24 @@ $(document).ready(function() {
 
 socket.emit('create', 'room1');
 
-socket.on('createMap', roomExists => {
-    roomExists = roomExists;
+socket.on('create-map', (mapCreated, countriesColorInOrder) => {
+
+    var countryNextColor;
+
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
-        
-        if(!roomExists) {
+        if(!mapCreated) {
             //Add random territories to start game
-            let countryRandomStartColor = getRandomItem(playersColors);
-
-            contriesColorList.push(countryRandomStartColor);
-
-            console.log(`NOT ->\nCountry: ${countryImgElement}
-                        Color: ${countryRandomStartColor}`);
-        
-            changeColors(countryImgElement, countryRandomStartColor);
-
+            countryNextColor = getRandomItem(playersColors);
+        } else {
+            countryNextColor = countriesColorInOrder[i];
         }
-    }
     
+        changeColors(countryImgElement, countryNextColor);
 
-    socket.emit('mapElements', { 
-        colors: contriesColorList
-    });
-});
-
-socket.on('updateMap', data => {
-    for (let countryImgElement of allOfWorldCountriesImages) {
-
-        if(data.colors === undefined) {
-            alert("Map already updated");
-            return;
-        }
-        
-        else {
-            changeColors(countryImgElement, data.colors[i]);
-            console.log(i);
-            console.log(`EXISTS ->\nCountry: ${countryImgElement}
-                        Color: ${data.colors[i]}`);
-            i++;
-        }
+        i++;
     }
-
-    i=0;
+    i = 0;
 });
 
 
