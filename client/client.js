@@ -2,33 +2,24 @@
 const socket = io('http://localhost:3000');
 
 const form = document.getElementById('userForm');
+const userNickname = document.getElementById('userName');
+const userRoom = document.getElementById('room');
 const gameAreaDiv = document.getElementById('gameArea');
 
-const color = [
-    "Red", "Blue", "Yellow", "Gray", "Green", "Purple"
-];
+var players = {};
 
-const goal = [
-    "Matar ciano", "Mata cinza", "Matar red"
-];
+//Video
+socket.on('connect', () => {
+    //displayMessage(`You connected with id: ${socket.id}`)
+    console.log(`You connected with id: ${socket.id}`);
+})
 
-const randomColor = Math.floor(Math.random() * color.length);
-const randomGoal = Math.floor(Math.random() * goal.length);
-
-//Client sends a message at the moment it got connected with the server
-socket.emit('newPlayer', {
-    color: color[randomColor], 
-    goal: goal[randomGoal]
-});
-
-//Client sends a message at the moment it got connected with the server
-socket.emit('clientToServer', "Hello, server!");
 
 form.onsubmit = function(e) {
     e.preventDefault();
     form.style.display = 'none';
     gameAreaDiv.style.display = 'block';
-    clientBalls[selfID].name = document.getElementById('userName').value;
-    socket.emit('clientName', clientBalls[selfID].name);
-    return false;
+    playerNickname = document.getElementById('userName').value;
+    playerRoomName = document.getElementById('room').value;
+    socket.emit('new-player', playerNickname, playerRoomName);
 }
