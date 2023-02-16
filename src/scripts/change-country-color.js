@@ -22,13 +22,15 @@ function changeColorServerSide(countryImgElement, countryNewColor) {
     //Dictionary to change in server side
     let countriesDict = {
         country: countryImgElement.id,
-        color: countryNewColor
+        color: countryNewColor,
+        troopsNumber: getCountryTroops(countryImgElement.id)
     };
 
     socket.emit('change-country-color', countriesDict);
 }
 
-socket.on('update-map', function(country, color) {
+socket.on('update-map', function(country, color, troopsNumber) {
+    let countryTroopsElement = document.getElementById(`${country}-troop-number`);
     let countryImgElement = document.getElementById(country);
     let classList = countryImgElement.classList;
 
@@ -40,6 +42,16 @@ socket.on('update-map', function(country, color) {
     else {
         classList.add(`${color}`);
     }
+
+    //Changing troops of this country
+    countryTroopsElement.innerHTML = troopsNumber;
 })
+
+function getCountryTroops(countryName) {
+    let troopsNumberFromHtml = document.getElementById(`${countryName}-troop-number`).innerHTML;
+    let troopsNumber = troopsNumberFromHtml.replace(/\D/g, "");
+    console.log("Get troop numbers: " + troopsNumber + " Country: " + countryName);
+    return troopsNumber;
+}
 
 export {changeColors};
