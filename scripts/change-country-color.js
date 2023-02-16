@@ -1,15 +1,10 @@
 const socket = io('http://localhost:3000');
 
-var _countryImgElement;
-var _countryNewColor;
-
 function changeColors(countryImgElement, countryNewColor) {
-    changeColorServerSide(countryImgElement, countryNewColor);
-    _countryImgElement = countryImgElement;
-    _countryNewColor = countryNewColor;
     //Change country image filter to new color
     //Can be use after attack success
     //Add color to img class
+    changeColorServerSide(countryImgElement, countryNewColor);
     let classList = countryImgElement.classList;
     
 
@@ -33,10 +28,18 @@ function changeColorServerSide(countryImgElement, countryNewColor) {
     socket.emit('change-country-color', countriesDict);
 }
 
-socket.on('update-map', (countryName, color) => {
-    let countryImage = document.getElementById(_countryImgElement.id);
-    console.log("update map color: " + _countryNewColor);
-    changeColors(countryImage, _countryNewColor);
+socket.on('update-map', function(country, color) {
+    let countryImgElement = document.getElementById(country);
+    let classList = countryImgElement.classList;
+
+    if(classList.length >= 2 && color != undefined) {
+        //Verify if it's is an attack source
+        classList.replace(classList[1], color);
+    }
+    
+    else {
+        classList.add(`${color}`);
+    }
 })
 
 export {changeColors};

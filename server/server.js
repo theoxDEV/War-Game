@@ -5,10 +5,9 @@ import express from 'express';
 const app = express();
 const httpServer = createServer(app);
 
+const countriesDict = {};
 const players = {};
 var playersLength;
-
-const countriesDict = {};
 
 let mapCreated = false;
 let roomId;
@@ -46,19 +45,16 @@ io.on('connection', (socket) => {
 
         //if => 3 create map when admin started playersLength
         //Room ready
-        if(playersLength == 1 && !mapCreated) {
+        if(!mapCreated) {
             console.log("Map created");
             io.emit('create-map', mapCreated, countriesDict);
             mapCreated = true;
-            //colors: contriesColorList
         }
         
         else {
             var countriesColorOrder = Object.keys(countriesDict).map(function(key){
                 return countriesDict[key];
             });
-
-            console.log(countriesColorOrder);
 
             io.emit('create-map', mapCreated, countriesColorOrder);
         }
@@ -69,26 +65,6 @@ io.on('connection', (socket) => {
         countriesDict[dict.country] = dict.color;
         io.emit('update-map', dict.country, dict.color);
     });
-
-    
-    /*socket.on('mapElements', data => {
-        countriesImgList = data.countries;
-        contriesColorList = data.colors;
-    });*/
-
-    /*if(!roomExists) {   
-        socket.on('create', function(room) {
-            socket.join(room);
-            console.log("Room: " + room);
-            console.log("Player: " + players);
-
-            //io.to(roomId).emit('createMap', roomExists);
-            io.emit('createMap', roomExists);
-            
-            roomExists = true;
-            roomId = room;
-        });
-    }*/
 
     socket.on('disconnect', (reason) => {
         if (reason === "io server disconnect") {
