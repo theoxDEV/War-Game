@@ -29,10 +29,13 @@ socket.on('create-map', (mapCreated, countriesColorInOrder) => {
 
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
+        
         if(!mapCreated) {
             //Add random territories to start game
             countryNextColor = getRandomItem(playersColors);
-        } else {
+        } 
+        
+        else {
             countryNextColor = countriesColorInOrder[i];
         }
     
