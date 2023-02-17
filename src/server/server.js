@@ -41,6 +41,7 @@ io.on('connection', (socket) => {
         };
 
         socket.join(playerRoomName);
+        console.log("Player room: " + players[socket.id].room);
 
         playersLength = Object.keys(players).length;
 

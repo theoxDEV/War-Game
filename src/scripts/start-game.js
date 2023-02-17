@@ -9,8 +9,6 @@ var playersQuantity = 6;
 var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
 var i = 0;
 
-var roomExists;
-
 
 //All of countries classes
 var allOfWorldCountriesImages = document.getElementsByClassName('countries-images');
