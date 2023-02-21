@@ -19,8 +19,6 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
-socket.emit('create', 'room1');
-
 socket.on('create-map', (mapCreated, countriesColorInOrder) => {
 
     var countryNextColor;
