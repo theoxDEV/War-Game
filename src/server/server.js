@@ -1,10 +1,19 @@
-import { createServer } from "node:http";
+import { createServer } from "http";
 import { Server } from "socket.io";
-import express from 'express';
+import express from 'express';import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+
+import createGame from "../game.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
+
 const httpServer = createServer(app);
 
+const game = createGame();
 const countriesObj = {};
 const players = {};
 var playersLength;
@@ -22,28 +31,41 @@ const io = new Server(httpServer, {
     }
  });
 
- app.get('/', (req, res) => {
-    res.send('Hello world');
+app.get('/', (req, res) => {
+    res.send('<h1>Hello world</h1>')
+});
+
+app.get("/lobby", (req, res) => {
+    res.sendFile(path.join(__dirname, '/../../public/', 'lobby.html'))
+});
+
+app.get("/game", (req, res) => {
+    res.sendFile(path.join(__dirname, '/../../public/', 'map.html'))
+});
+
+app.get("/:universalURL", (req, res) => {
+    res.send("404 URL NOT FOUND");
 });
 
 
 io.on('connection', (socket) => {
 
     socket.on('new-player', (playerNickname, playerRoomName) => {
-        console.log("New client connected, with id: " + socket.id);
-        var randomElements = getRandomColorAndGoal();
+        const playerId = socket.id;
 
-        players[socket.id] = {
-            name: playerNickname,
-            room: playerRoomName,
-            color: randomElements.color,
-            goal: randomElements.goal
-        };
+        game.addPlayer({
+            playerId: playerId, 
+            playerNickname: playerNickname, 
+            playerRoomName: playerRoomName
+        });
 
-        socket.join(playerRoomName);
-        console.log("Player room: " + players[socket.id].room);
+        console.log("Player server side: ", game.state.players);
+        
+        /*console.log("Player server side: ", player);
+        //socket.join(playerRoomName);
+        console.log("Player room: ", players);
 
-        playersLength = Object.keys(players).length;
+        playersLength = Object.keys(players).length;*/
 
         //if => 3 create map when admin started playersLength
         //Room ready
@@ -61,7 +83,7 @@ io.on('connection', (socket) => {
 
             io.emit('create-map', mapCreated, countriesColorOrder);
         }
-    });
+    })
 
     socket.on('change-country-color', dict => {
         //Saved in dictionary variable to emit 'map-update' to all clients
@@ -74,7 +96,7 @@ io.on('connection', (socket) => {
             troopsNumber: dict.troopsNumber
         }
 
-    });
+    })
 
     socket.on('attack-client-to-server', (attacker, defender) => {
         let attackObj = countriesObj[attacker];
@@ -103,7 +125,7 @@ io.on('connection', (socket) => {
 
         io.to("room1").emit('serverToClient', socket.id);
           // else the socket will automatically try to reconnect
-    });
+    })
 
 });
 
@@ -111,27 +133,7 @@ httpServer.listen(3000, () => {
     console.log('listening on *:3000');
 });
 
-function getRandomColorAndGoal() {
-    
-    const color = [
-        "Red", "Blue", "Yellow", "Gray", "Green", "Purple"
-    ];
-
-    const goal = [
-        "Matar ciano", "Mata cinza", "Matar red"
-    ];
-
-    const randomColor = Math.floor(Math.random() * color.length);
-    const randomGoal = Math.floor(Math.random() * goal.length);
-
-    return {
-        "color": color[randomColor],
-        "goal": goal[randomGoal]
-    }
-}
-
 //Battle settings
-
 function battle(attackList, defenseList) {
     var attackLostedTroops = 0;
     var defenseLostedTroops = 0;
