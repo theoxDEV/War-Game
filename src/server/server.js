@@ -13,7 +13,7 @@ const app = express();
 
 const httpServer = createServer(app);
 
-const game = createGame();
+var game = createGame();
 const countriesObj = {};
 const players = {};
 var playersLength;
@@ -23,6 +23,7 @@ let roomId;
 
 let countriesImgList;
 let contriesColorList;
+
 
 //Adding CORS - https://socket.io/docs/v4/handling-cors/#cors-header-access-control-allow-origin-missing
 const io = new Server(httpServer, { 
@@ -59,15 +60,20 @@ io.on('connection', (socket) => {
             playerRoomName: playerRoomName
         });
 
-        console.log("Player server side: ", game.state.players);
-        
-        /*console.log("Player server side: ", player);
-        //socket.join(playerRoomName);
-        console.log("Player room: ", players);
+        let roomExists = io.sockets.adapter.rooms.has(playerRoomName);
+        socket.join(playerRoomName);
 
-        playersLength = Object.keys(players).length;*/
+        //socket.emit('setup', game, roomExists);
+        io.to(playerRoomName).emit('setup', game, roomExists);
+    })
 
-        //if => 3 create map when admin started playersLength
+
+    socket.on('create-game', (adminNickName, room) => {
+        io.to(playerRoomName).emit('create-map', game, room);
+    }) 
+
+    /*
+    //if => 3 create map when admin started playersLength
         //Room ready
         if(!mapCreated) {
             console.log("Map created");
@@ -83,7 +89,7 @@ io.on('connection', (socket) => {
 
             io.emit('create-map', mapCreated, countriesColorOrder);
         }
-    })
+    */
 
     socket.on('change-country-color', dict => {
         //Saved in dictionary variable to emit 'map-update' to all clients
@@ -178,4 +184,8 @@ function diceResults(troopsQuantity) {
     }
 
     return playerDiceList;
+}
+
+function verifyIfRoomExists(room) {
+
 }

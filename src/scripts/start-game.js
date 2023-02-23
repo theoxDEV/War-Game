@@ -1,4 +1,5 @@
 import { changeColors } from './change-country-color.js';
+import createGame from "../game.js";
 //Establishing a connection with the server on port 5500y
 const socket = io('http://localhost:3000');
 
@@ -8,6 +9,8 @@ const socket = io('http://localhost:3000');
 var playersQuantity = 6;
 var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
 var i = 0;
+
+//const game = createGame();
 
 
 //All of countries classes
@@ -19,21 +22,21 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
-socket.on('create-map', (mapCreated, countriesColorInOrder) => {
+socket.on('create-map', (game, countriesColorInOrder) => {
 
     var countryNextColor;
 
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
-        
-        if(!mapCreated) {
-            //Add random territories to start game
-            countryNextColor = getRandomItem(playersColors);
-        } 
-        
-        else {
-            countryNextColor = countriesColorInOrder[i];
-        }
+        let countryName = countryImgElement.alt;
+
+        countryNextColor = getRandomItem(playersColors);
+
+        game.setCountry({
+            name: countryName,
+            color: countryNextColor,
+            troopsNumber: 1
+        });
     
         changeColors(countryImgElement, countryNextColor);
 
@@ -54,4 +57,3 @@ function getRandomItem(arr) {
 
     return item;
 }
-
