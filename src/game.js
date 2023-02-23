@@ -1,24 +1,33 @@
 export default function createGame() {
+
     const state = {
-        players: {}
+        players: {},
+        countries: {}
     }
+        
+    var color = [
+        "Red", "Blue", "Yellow", "Gray", "Green", "Purple"
+    ];
+
+    var goal = [
+        "Matar ciano", "Mata cinza", "Matar red"
+    ];
 
     function getRandomColorAndGoal() {
-        
-        const color = [
-            "Red", "Blue", "Yellow", "Gray", "Green", "Purple"
-        ];
-
-        const goal = [
-            "Matar ciano", "Mata cinza", "Matar red"
-        ];
 
         const randomColor = Math.floor(Math.random() * color.length);
         const randomGoal = Math.floor(Math.random() * goal.length);
 
+        let selectedColor = color[randomColor];
+        let selectedGoal = goal[randomGoal];
+
+        //Remove element of list
+        color.splice(color.indexOf(selectedColor), 1);
+        goal.splice(goal.indexOf(selectedGoal), 1);
+
         return {
-            "color": color[randomColor],
-            "goal": goal[randomGoal]
+            "color": selectedColor,
+            "goal": selectedGoal
         }
     }
 
@@ -32,13 +41,25 @@ export default function createGame() {
             room: player.playerRoomName,
             color: randomElements.color,
             goal: randomElements.goal
-        }; 
+        };
+    }
 
-        console.log("Player game.js:", state.players[player.playerId])
+    function setCountry(country) {
+        state.countries[country.countryName] = {
+            name: country.name,
+            color: country.color,
+            troopsNumber: country.troopsNumber
+        }
+    }
+
+    function getPlayers() {
+        return state.players;
     }
 
     return {
         addPlayer,
-        state
+        state,
+        getPlayers,
+        setCountry
     }
 }
