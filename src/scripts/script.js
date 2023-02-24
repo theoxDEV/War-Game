@@ -3,6 +3,10 @@ import { attack } from './attack.js';
 //Establishing a connection with the server on port 5500y
 const socket = io('http://localhost:3000');
 
+socket.on('matheux', () => {
+    console.log("Matheux");
+})
+
 var countryHasBeenClicked = false;
 var countriesBattle = [];
 
