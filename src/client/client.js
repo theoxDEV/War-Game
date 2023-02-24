@@ -1,20 +1,17 @@
-import createGame from '../game.js';
 //Establishing a connection with the server on port 5500y
 const socket = io('http://localhost:3000');
 
-const form = document.getElementById('userForm');
+export { socket };
+
 const userNickname = document.getElementById('userName');
 const userRoom = document.getElementById('room');
-const gameAreaDiv = document.getElementById('gameArea');
 
 const readyBtn = document.getElementById('ready-btn');
-const startBtn = document.querySelector('button[type=submit]');
+const startBtn = document.getElementById('start-btn');
 
 //const game = createGame();
 const playersLobby = {};
 var playerId;
-
-const game = createGame();
 
 //Video
 socket.on('connect', () => {
@@ -26,8 +23,9 @@ socket.on('connect', () => {
 //Setup lobby
 socket.on('setup', (game, roomExists) => {
     let playersInLobbyList = game.state.players;
+    let adminId = Object.values(playersInLobbyList)[0]['id'];
 
-    if(roomExists) { 
+    if(roomExists && socket.id != adminId) { 
         startBtn.style.display = 'none';
         readyBtn.innerText = "Wait for ADMIN start game";
     }
@@ -39,13 +37,16 @@ socket.on('setup', (game, roomExists) => {
     }
 })
 
-form.onsubmit = function(e) {
-    e.preventDefault();
-    form.style.display = 'none';
-    gameAreaDiv.style.display = 'block';
+function createGame() {
+
+    var playerRoomName = document.getElementById('room').value;
     
-    socket.emit('create-game', playerNickname, playerRoomName);
+    socket.emit('create-game', playerRoomName);
 }
+
+
+startBtn.addEventListener("click", createGame);
+
 
 function roomLobby(){
     var playerNickname = document.getElementById('userName').value;
