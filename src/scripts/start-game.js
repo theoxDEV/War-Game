@@ -1,20 +1,18 @@
-import { changeColors } from './change-country-color.js';
+import { socket } from '../client/client.js';
 import createGame from "../game.js";
-//Establishing a connection with the server on port 5500y
-const socket = io('http://localhost:3000');
 
-
+const game = createGame();
 //Global variables
 //Three players default
 var playersQuantity = 6;
 var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
 var i = 0;
 
-//const game = createGame();
-
-
 //All of countries classes
 var allOfWorldCountriesImages = document.getElementsByClassName('countries-images');
+
+const form = document.getElementById('userForm');
+const gameAreaDiv = document.getElementById('gameArea');
 
 
 $(document).ready(function() {
@@ -22,13 +20,13 @@ $(document).ready(function() {
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
-socket.on('create-map', (game, countriesColorInOrder) => {
+socket.on('create-map', () => {
 
     var countryNextColor;
 
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
-        let countryName = countryImgElement.alt;
+        let countryName = countryImgElement.id;
 
         countryNextColor = getRandomItem(playersColors);
 
@@ -37,13 +35,32 @@ socket.on('create-map', (game, countriesColorInOrder) => {
             color: countryNextColor,
             troopsNumber: 1
         });
-    
+
+        setInitialScreen();
+        changeTroopNumber(countryName);
         changeColors(countryImgElement, countryNextColor);
 
         i++;
     }
     i = 0;
+    socket.emit('set-initial-state', game);
 });
+
+socket.on('get-initial-map', (gameFromServer) => {
+    console.log("Get initial map", gameFromServer);
+    
+    for(let countryImgElement of allOfWorldCountriesImages) {
+        let countryName = countryImgElement.id;
+        let countryNextColor = gameFromServer.state.countries[countryName].color;
+        
+        setInitialScreen();
+        changeTroopNumber(countryName);
+        changeColors(countryImgElement, countryNextColor);
+        
+        i++;
+    }
+    i = 0;
+})
 
 
 // program to get a random item from an array
@@ -56,4 +73,33 @@ function getRandomItem(arr) {
     const item = arr[randomIndex];
 
     return item;
+}
+
+
+// Change country image filter to new color
+function changeColors(countryImgElement, countryNewColor) {
+    //Can be use after attack success
+    //Add color to img class
+    let classList = countryImgElement.classList;
+    
+
+    if(classList.length >= 2 && countryNewColor != undefined) {
+        //Verify if it's is an attack source
+        classList.replace(classList[1], countryNewColor);
+    }
+    
+    else {
+        classList.add(`${countryNewColor}`);
+    }
+}
+
+// Change all of country troop number to 0 at start game
+function changeTroopNumber(countryName) {
+    var countryTroop = document.getElementById(countryName + '-troop-number');
+    countryTroop.innerHTML = 1;
+}
+
+function setInitialScreen() {
+    form.style.display = 'none';
+    gameAreaDiv.style.display = 'block';
 }

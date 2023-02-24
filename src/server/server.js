@@ -13,11 +13,12 @@ const app = express();
 
 const httpServer = createServer(app);
 
-var game = createGame();
+const game = createGame();
 const countriesObj = {};
 const players = {};
 var playersLength;
 
+var roomExists = false;
 let mapCreated = false;
 let roomId;
 
@@ -60,17 +61,26 @@ io.on('connection', (socket) => {
             playerRoomName: playerRoomName
         });
 
-        let roomExists = io.sockets.adapter.rooms.has(playerRoomName);
+        roomExists = io.sockets.adapter.rooms.has(playerRoomName);
         socket.join(playerRoomName);
 
-        //socket.emit('setup', game, roomExists);
         io.to(playerRoomName).emit('setup', game, roomExists);
     })
 
 
-    socket.on('create-game', (adminNickName, room) => {
-        io.to(playerRoomName).emit('create-map', game, room);
-    }) 
+    socket.on('create-game', (room) => {
+        if(roomExists) {
+            io.to(room).emit('get-initial-map', game);
+        }
+        
+        else {
+            io.to(room).emit('create-map', game);
+        }
+    })
+
+    socket.on('set-initial-state', (gameInitialState) => {
+        game.state.countries = gameInitialState.state.countries;
+    })
 
     /*
     //if => 3 create map when admin started playersLength

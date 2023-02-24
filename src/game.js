@@ -45,7 +45,7 @@ export default function createGame() {
     }
 
     function setCountry(country) {
-        state.countries[country.countryName] = {
+        state.countries[country.name] = {
             name: country.name,
             color: country.color,
             troopsNumber: country.troopsNumber
