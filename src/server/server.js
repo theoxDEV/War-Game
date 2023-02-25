@@ -1,6 +1,7 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-import express from 'express';import { fileURLToPath } from 'url';
+import express from 'express';
+import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
 
@@ -52,6 +53,8 @@ app.get("/:universalURL", (req, res) => {
 
 io.on('connection', (socket) => {
 
+    sockets_list.push(socket);
+
     socket.on('new-player', (playerNickname, playerRoomName) => {
         const playerId = socket.id;
 
@@ -77,6 +80,10 @@ io.on('connection', (socket) => {
     socket.on('set-initial-state', (gameInitialState) => {
         game.state.countries = gameInitialState.state.countries;
         io.to(roomId).emit('get-initial-map', game);
+    })
+
+    socket.on('start-game', () => {
+        io.to(roomId).emit('pass-turn', game);
     })
 
 
