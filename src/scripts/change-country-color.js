@@ -25,4 +25,4 @@ function getCountryTroops(countryName) {
     return troopsNumber;
 }
 
-export {changeColors};
+//export {changeColors};

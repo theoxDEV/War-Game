@@ -53,8 +53,6 @@ app.get("/:universalURL", (req, res) => {
 
 io.on('connection', (socket) => {
 
-    sockets_list.push(socket);
-
     socket.on('new-player', (playerNickname, playerRoomName) => {
         const playerId = socket.id;
 
