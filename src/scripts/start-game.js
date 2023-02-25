@@ -14,15 +14,26 @@ var allOfWorldCountriesImages = document.getElementsByClassName('countries-image
 const form = document.getElementById('userForm');
 const gameAreaDiv = document.getElementById('gameArea');
 
+var adminId;
+
 
 $(document).ready(function() {
     //Hover settings
     $(".countries-images").hover(function(){ $(this).toggleClass('shadow'); });
 });
 
+// Admin create map
 socket.on('create-map', () => {
 
+    if(adminId == undefined) {
+        adminId = socket.id;
+        console.log("Admin id " + adminId);
+    } else{
+        console.log("Has admin");
+    }
+
     var countryNextColor;
+    
 
     //Distribute players on the board
     for (let countryImgElement of allOfWorldCountriesImages) {
@@ -44,8 +55,9 @@ socket.on('create-map', () => {
     }
     i = 0;
     socket.emit('set-initial-state', game);
-});
+})
 
+//Room gets map created by admin
 socket.on('get-initial-map', (gameFromServer) => {
     console.log("Get initial map", gameFromServer);
     

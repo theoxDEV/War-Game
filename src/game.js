@@ -52,6 +52,12 @@ export default function createGame() {
         }
     }
 
+    function moveTroopsInCountry(country) {
+        state.countries[country.name] = {
+            troopsNumber: country.troopsNumber
+        }
+    }
+
     function getPlayers() {
         return state.players;
     }
@@ -60,6 +66,7 @@ export default function createGame() {
         addPlayer,
         state,
         getPlayers,
-        setCountry
+        setCountry,
+        moveTroopsInCountry
     }
 }
