@@ -69,37 +69,16 @@ io.on('connection', (socket) => {
 
 
     socket.on('create-game', (room) => {
-        if(roomExists) {
-            io.to(room).emit('get-initial-map', game);
-        }
-        
-        else {
-            io.to(room).emit('create-map', game);
-        }
+        roomId = room;
+        io.to(socket.id).emit('create-map');
     })
+
 
     socket.on('set-initial-state', (gameInitialState) => {
         game.state.countries = gameInitialState.state.countries;
+        io.to(roomId).emit('get-initial-map', game);
     })
 
-    /*
-    //if => 3 create map when admin started playersLength
-        //Room ready
-        if(!mapCreated) {
-            console.log("Map created");
-            io.emit('create-map', mapCreated, countriesObj);
-            mapCreated = true;
-        }
-        
-        else {
-            var countriesColorOrder = Object.keys(countriesObj).map(function(key){
-                console.log(countriesObj[key]);
-                return countriesObj[key].color;
-            });
-
-            io.emit('create-map', mapCreated, countriesColorOrder);
-        }
-    */
 
     socket.on('change-country-color', dict => {
         //Saved in dictionary variable to emit 'map-update' to all clients
@@ -177,7 +156,6 @@ function battle(attackList, defenseList) {
 
 }
 
-
 function diceResults(troopsQuantity) {
     let playerDiceList = [];
 
@@ -194,8 +172,4 @@ function diceResults(troopsQuantity) {
     }
 
     return playerDiceList;
-}
-
-function verifyIfRoomExists(room) {
-
 }
