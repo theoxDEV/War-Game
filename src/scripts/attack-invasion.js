@@ -1,4 +1,4 @@
-import { changeColors } from './change-country-color.js';
+//import { changeColors } from './change-country-color.js';
 
 function attackInvasion(attackerImage, attackerTroops, defenseImage, defenseTroops) {
     console.log(`Defense troops: ${defenseTroops.innerHTML}`);

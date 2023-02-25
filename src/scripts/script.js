@@ -1,11 +1,8 @@
 import { attack } from './attack.js';
+import { socket } from '../client/client.js';
 
 //Establishing a connection with the server on port 5500y
-const socket = io('http://localhost:3000');
-
-socket.on('matheux', () => {
-    console.log("Matheux");
-})
+//const socket = io('http://localhost:3000');
 
 var countryHasBeenClicked = false;
 var countriesBattle = [];
@@ -14,7 +11,6 @@ var countriesBattle = [];
 //Attack and move defender army:
 //attacker country has to have a border with defender country
 $(".countries-images").click(function(e) {
-    
     //this.style['stroke-width'] = '7px'; (focus on clicked country)
     //First country has been clicked (Attack)
     countriesBattle.push(this);

@@ -1,5 +1,4 @@
 import { hasBorders } from './borders.js';
-import { changeColors } from './change-country-color.js';
 import { attackInvasion } from './attack-invasion.js';
 
 //Establishing a connection with the server on port 5500y
