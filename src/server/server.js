@@ -16,8 +16,13 @@ const httpServer = createServer(app);
 
 const game = createGame();
 const countriesObj = {};
-const players = {};
-var playersLength;
+var players = [];
+
+/* TURN BASED*/
+let current_turn = 0;
+let timeOut;
+let _turn = 0;
+const MAX_WAITING = 50000;
 
 var roomExists = false;
 let mapCreated = false;
@@ -79,9 +84,15 @@ io.on('connection', (socket) => {
         game.state.countries = gameInitialState.state.countries;
         io.to(roomId).emit('get-initial-map', game);
     })
+    
 
-    socket.on('start-game', () => {
-        io.to(roomId).emit('start-turns', game);
+    socket.on('pass-turn', () => {
+        players = Object.keys(game.state.players);
+
+        if(players[_turn] == socket.id) {
+            resetTimeOut();
+            next_turn();
+        }
     })
 
 
@@ -131,6 +142,7 @@ httpServer.listen(3000, () => {
     console.log('listening on *:3000');
 });
 
+
 //Battle settings
 function battle(attackList, defenseList) {
     var attackLostedTroops = 0;
@@ -175,4 +187,27 @@ function diceResults(troopsQuantity) {
     }
 
     return playerDiceList;
+}
+
+
+//Players next turn
+
+function next_turn(){
+    var current_player = players[_turn];
+    _turn = current_turn++ % players.length;
+    io.to(players[_turn]).emit('start-turns', game, current_player);
+    triggerTimeout();
+ }
+
+function triggerTimeout(){
+   timeOut = setTimeout(()=>{
+     next_turn();
+   }, MAX_WAITING);
+}
+
+function resetTimeOut(){
+    if(typeof timeOut === 'object'){
+      console.log("timeout reset");
+      clearTimeout(timeOut);
+    }
 }
