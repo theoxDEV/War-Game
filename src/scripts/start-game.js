@@ -64,6 +64,7 @@ socket.on('get-initial-map', (gameFromServer) => {
 // program to get a random item from an array
 function getRandomItem(arr) {
 
+    console.log(arr);
     // get random index value
     const randomIndex = Math.floor(Math.random() * arr.length);
 
@@ -72,6 +73,8 @@ function getRandomItem(arr) {
 
     return item;
 }
+
+export { getRandomItem };
 
 
 // Change country image filter to new color

@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('start-game', () => {
-        io.to(roomId).emit('pass-turn', game);
+        io.to(roomId).emit('start-turns', game);
     })
 
 
@@ -99,12 +99,10 @@ io.on('connection', (socket) => {
     })
 
     socket.on('attack-client-to-server', (attacker, defender) => {
-        let attackObj = countriesObj[attacker];
-        let defenseObj = countriesObj[defender];
+        let attackObj = game.state.countries[attacker];
+        let defenseObj = game.state.countries[defender];
 
-        console.log("Dict server: ", attacker);
-        console.log("Att and def server: ", attackObj + " ::: ", defenseObj);
-        io.emit('attack-server-to-clients', attackObj, defenseObj);
+        io.to(roomId).emit('attack-server-to-clients', attackObj, defenseObj);
     })
 
     socket.on('battle-to-server', (attackTroops, defenseTroops) => {

@@ -49,11 +49,6 @@ function attack(attacker, defender) {
     
     socket.emit('battle-to-server', attackerTroopsQuantity, defenseTroopsQuantity);
 
-
-    //emit battle
-    //battleResult == serverResult
-    //socket.on('server-battle-result', function(attLosted, defLosted) => {  })
-
 }
 
 socket.on('update-troops', (battleResult) => {
