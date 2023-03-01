@@ -29,7 +29,7 @@ socket.on('create-map', () => {
         game.setCountry({
             name: countryName,
             color: countryNextColor,
-            troopsNumber: 1
+            troopsNumber: 50
         });
 
         setInitialScreen();
@@ -57,7 +57,7 @@ socket.on('get-initial-map', (gameFromServer) => {
     }
     i = 0;
 
-    socket.emit("start-game");
+    socket.emit("pass-turn");
 })
 
 
@@ -97,7 +97,7 @@ function changeColors(countryImgElement, countryNewColor) {
 // Change all of country troop number to 0 at start game
 function changeTroopNumber(countryName) {
     var countryTroop = document.getElementById(countryName + '-troop-number');
-    countryTroop.innerHTML = 1;
+    countryTroop.innerHTML = 50;
 }
 
 function setInitialScreen() {
