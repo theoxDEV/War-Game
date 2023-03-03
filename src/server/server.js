@@ -195,7 +195,8 @@ function diceResults(troopsQuantity) {
 function next_turn(){
     var current_player = players[_turn];
     _turn = current_turn++ % players.length;
-    io.to(players[_turn]).emit('start-turns', game, current_player);
+    console.log("Next turn: ", current_player);
+    io.to(current_player).emit('start-turns', game, current_player);
     triggerTimeout();
  }
 
