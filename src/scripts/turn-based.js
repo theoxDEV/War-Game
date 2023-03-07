@@ -1,18 +1,25 @@
 import { socket } from '../client/client.js';
+import { putPiecesOnBoard } from '../scripts/script.js';
 
 let current_playerObj;
 let current_player_color;
+var countries;
+var piecesQuantity;
+var gameS;
 
 const MAX_WAITING = 10000;
 
 socket.on('start-turns', (game, current_player) => {
     current_playerObj = game.state.players[current_player];
-    var current_player_color = current_playerObj.color;
-    var countries = Object.values(game.state.countries);
+    current_player_color = current_playerObj.color;
+    countries = Object.values(game.state.countries);
+    piecesQuantity = boardPieces(countries, current_player_color);
 
-    var piecesQuantity = boardPieces(countries, current_player_color);
+    console.log("Current player: ", current_playerObj);
 
-    putPiecesOnBoard(piecesQuantity, game, current_player_color);
+    gameS = putPiecesOnBoard(piecesQuantity, game, current_player_color);
+
+    console.log("Turn based: ", gameS);
 })
 
 
@@ -26,7 +33,7 @@ function boardPieces(countries, playerColor) {
         }
     }
 
-    //War rule
+    //Game rule
     if(countriesCount <= 7) {
         pieceToPutIntoBoard = 3;
     }
@@ -36,11 +43,3 @@ function boardPieces(countries, playerColor) {
 
     return pieceToPutIntoBoard;
 }
-
-function putPiecesOnBoard() {
-
-}
-
-
-
-//if click pass_turn button emit pass-turn
