@@ -5,7 +5,7 @@ const game = createGame();
 //Global variables
 //Three players default
 var playersQuantity = 6;
-var playersColors = ['blue', 'green', 'yellow', 'gray', 'purple', 'red'];
+var playersColors = ['Blue', 'Green', 'Yellow', 'Gray', 'Purple', 'Red'];
 var i = 0;
 
 //All of countries classes
@@ -64,7 +64,6 @@ socket.on('get-initial-map', (gameFromServer) => {
 // program to get a random item from an array
 function getRandomItem(arr) {
 
-    console.log(arr);
     // get random index value
     const randomIndex = Math.floor(Math.random() * arr.length);
 

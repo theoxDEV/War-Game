@@ -58,14 +58,9 @@ export default function createGame() {
         }
     }
 
-    function getPlayers() {
-        return state.players;
-    }
-
     return {
         addPlayer,
         state,
-        getPlayers,
         setCountry,
         moveTroopsInCountry
     }

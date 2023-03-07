@@ -5,29 +5,58 @@ import createGame from "../game.js";
 //Establishing a connection with the server on port 5500y
 //const socket = io('http://localhost:3000');
 
-var gameScript = createGame();
+const game_const = createGame();
 var countryHasBeenClicked = false;
 var countriesBattle = [];
 
+let _piecesQuantity;
+let _playerColor;
+let _game;
+let countryTroopsNumber;
+
+var countryName;
+
+
+$(".countries-images").click(function(e) {
+    countryName = this.id;
+    putPiecesOnBoard(_piecesQuantity, _game, _playerColor)
+});
+
+
 function putPiecesOnBoard(piecesQuantity, game, playerColor) {
-    $(".countries-images").click(function(e) {
-        var countryName = this.id;
+
+    if(typeof countryName == 'undefined') {
+        _piecesQuantity = piecesQuantity;
+        _game = game;
+        _playerColor = playerColor;
+        return;
+    }
+    
+    else if(_piecesQuantity > 0) {
+        countryTroopsNumber = game.state.countries[countryName].troopsNumber;
 
         if(game.state.countries[countryName].color == playerColor) {
-            gameScript.moveTroopsInCountry({
-                name: countryName, 
-                troopsNumber: piecesQuantity
+            game_const.setCountry({
+                name: countryName,
+                color: playerColor,
+                troopsNumber: countryTroopsNumber + 1
             });
-            
-            return game;
+
+            game.state = game_const.state;
+
+            renderizeClientMap(countryName);
+            _piecesQuantity--;
         }
         
         else {
             alert("You can only add troops in your countries");
             return;
         }
-
-    });
+    }
+    
+    else {
+        return game_const;
+    }
 }
 
 export { putPiecesOnBoard };
@@ -67,5 +96,11 @@ function attackScript() {
             countryHasBeenClicked = true;
         }
     });
+}
+
+function renderizeClientMap(countryName) {
+    let countryText = document.getElementById(countryName + '-troop-number');
+
+    countryText.innerHTML++;
 }
 
