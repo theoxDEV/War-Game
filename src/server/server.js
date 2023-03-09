@@ -24,6 +24,9 @@ let timeOut;
 let _turn = 0;
 const MAX_WAITING = 50000;
 
+/* COUNTRY ITERATOR*/
+var country_iterator = 0;
+
 var roomExists = false;
 let mapCreated = false;
 let roomId;
@@ -81,7 +84,22 @@ io.on('connection', (socket) => {
 
 
     socket.on('set-initial-state', (gameInitialState) => {
-        game.state.countries = gameInitialState.state.countries;
+        let countries = gameInitialState.state.countries;
+
+        const keys = Object.keys(countries);
+
+        keys.forEach((key, index) => {
+            let country = countries[key];
+
+            game.setCountry({
+                name: country.name,
+                color: country.color,
+                troopsNumber: country.troopsNumber
+            })
+
+            console.log(`${country.name}: ${country.troopsNumber}`);
+        });
+
         io.to(roomId).emit('get-initial-map', game);
     })
     

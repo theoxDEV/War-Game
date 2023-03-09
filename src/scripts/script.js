@@ -1,67 +1,25 @@
 import { attack } from './attack.js';
 import { socket } from '../client/client.js';
-import createGame from "../game.js";
+import { putPiecesOnBoard } from '../scripts/turn-based.js';
 
 //Establishing a connection with the server on port 5500y
 //const socket = io('http://localhost:3000');
 
-const game_const = createGame();
+
 var countryHasBeenClicked = false;
 var countriesBattle = [];
 
 let _piecesQuantity;
 let _playerColor;
 let _game;
-let countryTroopsNumber;
 
 var countryName;
 
 
 $(".countries-images").click(function(e) {
     countryName = this.id;
-    putPiecesOnBoard(_piecesQuantity, _game, _playerColor)
+    putPiecesOnBoard(countryName)
 });
-
-
-function putPiecesOnBoard(piecesQuantity, game, playerColor) {
-
-    if(typeof countryName == 'undefined') {
-        _piecesQuantity = piecesQuantity;
-        _game = game;
-        _playerColor = playerColor;
-        return;
-    }
-    
-    else if(_piecesQuantity > 0) {
-        countryTroopsNumber = game.state.countries[countryName].troopsNumber;
-
-        if(game.state.countries[countryName].color == playerColor) {
-            game_const.setCountry({
-                name: countryName,
-                color: playerColor,
-                troopsNumber: countryTroopsNumber + 1
-            });
-
-            game.state = game_const.state;
-
-            renderizeClientMap(countryName);
-            _piecesQuantity--;
-        }
-        
-        else {
-            alert("You can only add troops in your countries");
-            return;
-        }
-    }
-    
-    else {
-        return game_const;
-    }
-}
-
-export { putPiecesOnBoard };
-
-
 
 function attackScript() {
     //Attack and move defender army:
@@ -96,11 +54,5 @@ function attackScript() {
             countryHasBeenClicked = true;
         }
     });
-}
-
-function renderizeClientMap(countryName) {
-    let countryText = document.getElementById(countryName + '-troop-number');
-
-    countryText.innerHTML++;
 }
 
