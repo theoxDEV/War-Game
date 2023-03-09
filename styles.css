@@ -24,11 +24,10 @@
   drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
 }
 
-/*body {
-  background-image: url(images/background-image.jpg);
-  width: 100vh;
-  height: 100vh;
-}*/
+/* NOT YOUR TURN */
+.no-click {
+  pointer-events: none;
+}
 
 .hover-class {
   -webkit-filter: var(--hoverWebKit-Filter-Settings);

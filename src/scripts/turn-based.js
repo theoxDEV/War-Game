@@ -3,6 +3,9 @@ import createGame from "../game.js";
 
 const game_const = createGame();
 
+
+const gameAreaDiv = document.getElementById('gameArea');
+
 let current_playerObj;
 let current_player_color;
 let countryTroopsNumber;
@@ -13,18 +16,24 @@ var _game;
 var _playerColor;
 const MAX_WAITING = 10000;
 
+socket.on('not-your-turn', () => {
+    gameAreaDiv.classList.add("no-click");
+})
+
 socket.on('start-turns', (game, current_player) => {
+
+    /* Remove no-click class of emitted 'not-your-turn'*/
+    if(gameAreaDiv.classList.contains("no-click")) {
+        gameAreaDiv.classList.remove("no-click")
+    }
+
     _game = game;
     current_playerObj = game.state.players[current_player];
     current_player_color = current_playerObj.color;
     countries = Object.values(game.state.countries);
     piecesQuantity = boardPieces(countries, current_player_color);
 
-    console.log("Current player: ", current_playerObj);
-
-    /*gameS = putPiecesOnBoard(piecesQuantity, game, current_player_color);
-
-    console.log(gameS);*/
+    console.log("Current player: ", current_playerObj.color, socket.id);
 })
 
 
@@ -50,7 +59,7 @@ function boardPieces(countries, playerColor) {
     return pieceToPutIntoBoard;
 }
 
-function putPiecesOnBoard(countryName/*piecesQuantity, game, playerColor*/) {
+function putPiecesOnBoard(countryName) {
     console.log("piecesQuantity", piecesQuantity);
 
     if(typeof countryName == 'undefined') {
