@@ -48,9 +48,10 @@ socket.on('get-initial-map', (gameFromServer) => {
     for(let countryImgElement of allOfWorldCountriesImages) {
         let countryName = countryImgElement.id;
         let countryNextColor = gameFromServer.state.countries[countryName].color;
+        let countryTroopsNumber = gameFromServer.state.countries[countryName].troopsNumber;
         
         setInitialScreen();
-        changeTroopNumber(countryName);
+        changeTroopNumber(countryName, countryTroopsNumber);
         changeColors(countryImgElement, countryNextColor);
         
         i++;
@@ -94,9 +95,9 @@ function changeColors(countryImgElement, countryNewColor) {
 }
 
 // Change all of country troop number to 0 at start game
-function changeTroopNumber(countryName) {
+function changeTroopNumber(countryName, countryTroopsNumber) {
     var countryTroop = document.getElementById(countryName + '-troop-number');
-    countryTroop.innerHTML = 1;
+    countryTroop.innerHTML = countryTroopsNumber;
 }
 
 function setInitialScreen() {

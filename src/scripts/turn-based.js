@@ -1,15 +1,20 @@
 import { socket } from '../client/client.js';
-import { putPiecesOnBoard } from '../scripts/script.js';
+import createGame from "../game.js";
+
+const game_const = createGame();
 
 let current_playerObj;
 let current_player_color;
+let countryTroopsNumber;
 var countries;
 var piecesQuantity;
-var gameS;
 
+var _game;
+var _playerColor;
 const MAX_WAITING = 10000;
 
 socket.on('start-turns', (game, current_player) => {
+    _game = game;
     current_playerObj = game.state.players[current_player];
     current_player_color = current_playerObj.color;
     countries = Object.values(game.state.countries);
@@ -17,13 +22,14 @@ socket.on('start-turns', (game, current_player) => {
 
     console.log("Current player: ", current_playerObj);
 
-    gameS = putPiecesOnBoard(piecesQuantity, game, current_player_color);
+    /*gameS = putPiecesOnBoard(piecesQuantity, game, current_player_color);
 
-    console.log("Turn based: ", gameS);
+    console.log(gameS);*/
 })
 
 
 function boardPieces(countries, playerColor) {
+    _playerColor = playerColor;
     let countriesCount = 0;
     let pieceToPutIntoBoard = 0;
 
@@ -42,4 +48,47 @@ function boardPieces(countries, playerColor) {
     }
 
     return pieceToPutIntoBoard;
+}
+
+function putPiecesOnBoard(countryName/*piecesQuantity, game, playerColor*/) {
+    console.log("piecesQuantity", piecesQuantity);
+
+    if(typeof countryName == 'undefined') {
+        return;
+    }
+    
+    else if(piecesQuantity > 0) {
+        countryTroopsNumber = _game.state.countries[countryName].troopsNumber;
+
+        if(_game.state.countries[countryName].color == _playerColor) {
+            game_const.setCountry({
+                name: countryName,
+                color: _playerColor,
+                troopsNumber: countryTroopsNumber + 1
+            });
+
+            _game.state = game_const.state;
+
+            renderizeClientMap(countryName);
+            piecesQuantity--;
+        }
+        
+        else {
+            alert("You can only add troops in your countries");
+            return;
+        }
+    }
+    
+    else if(piecesQuantity == 0){
+        socket.emit('set-initial-state', game_const);
+    }
+}
+
+export { putPiecesOnBoard };
+
+
+function renderizeClientMap(countryName) {
+    let countryText = document.getElementById(countryName + '-troop-number');
+
+    countryText.innerHTML++;
 }
