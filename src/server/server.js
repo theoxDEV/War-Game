@@ -19,10 +19,11 @@ const countriesObj = {};
 var players = [];
 
 /* TURN BASED*/
+let current_socket = 0;
 let current_turn = 0;
 let timeOut;
 let _turn = 0;
-const MAX_WAITING = 50000;
+const MAX_WAITING = 20000;
 
 /* COUNTRY ITERATOR*/
 var country_iterator = 0;
@@ -96,8 +97,6 @@ io.on('connection', (socket) => {
                 color: country.color,
                 troopsNumber: country.troopsNumber
             })
-
-            console.log(`${country.name}: ${country.troopsNumber}`);
         });
 
         io.to(roomId).emit('get-initial-map', game);
@@ -108,6 +107,7 @@ io.on('connection', (socket) => {
         players = Object.keys(game.state.players);
 
         if(players[_turn] == socket.id) {
+            current_socket = socket;
             resetTimeOut();
             next_turn();
         }
@@ -214,7 +214,10 @@ function next_turn(){
     var current_player = players[_turn];
     _turn = current_turn++ % players.length;
     console.log("Next turn: ", current_player);
+    console.log("Current turn: ", current_socket.id);
+
     io.to(current_player).emit('start-turns', game, current_player);
+    current_socket.broadcast.emit('not-your-turn');
     triggerTimeout();
  }
 
