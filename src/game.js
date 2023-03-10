@@ -58,6 +58,11 @@ export default function createGame() {
         }
     }
 
+
+    /* BATTLE FUNCTIONS  */
+    
+
+
     return {
         addPlayer,
         state,
