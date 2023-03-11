@@ -8,7 +8,7 @@ const gameAreaDiv = document.getElementById('gameArea');
 
 let current_playerObj;
 let current_player_color;
-let countryTroopsNumber;
+let countryTroopsNumber = 1;
 var countries;
 var piecesQuantity;
 
@@ -60,23 +60,24 @@ function boardPieces(countries, playerColor) {
 }
 
 function putPiecesOnBoard(countryName) {
-    console.log("piecesQuantity", piecesQuantity);
 
     if(typeof countryName == 'undefined') {
+        /* GET troops from 'server' game state */
+        countryTroopsNumber = _game.state.countries[countryName].troopsNumber;
         return false;
     }
     
     else if(piecesQuantity > 0) {
-        countryTroopsNumber = _game.state.countries[countryName].troopsNumber;
-
         if(_game.state.countries[countryName].color == _playerColor) {
+
             game_const.setCountry({
                 name: countryName,
                 color: _playerColor,
                 troopsNumber: countryTroopsNumber + 1
             });
 
-            _game.state = game_const.state;
+            /* UPDATING the country troops from 'client' state */
+            countryTroopsNumber = game_const.state.countries[countryName].troopsNumber;
 
             renderizeClientMap(countryName);
             piecesQuantity--;

@@ -115,18 +115,17 @@ io.on('connection', (socket) => {
     socket.on('attack-client-to-server', (attacker, defender) => {
         let attackObj = game.state.countries[attacker];
         let defenseObj = game.state.countries[defender];
+        
+        console.log("server_Attack obj: ", attackObj);
+        console.log("server_defense obj: ", defenseObj);
 
         io.to(roomId).emit('attack-server-to-clients', attackObj, defenseObj);
     })
 
-    socket.on('battle-to-server', (attackTroops, defenseTroops) => {
-        //Call Dice function
-        let attackerDiceList = diceResults(attackTroops);
-        let defenderDiceList = diceResults(defenseTroops);
+    socket.on('battle-to-server', (attack, defense) => {
+        game.battle(attack, defense);
 
-        var battleResult = battle(attackerDiceList, defenderDiceList);
-
-        io.to(roomId).emit('update-troops', battleResult);
+        io.to(roomId).emit('update-troops', (game));
     })
 
     socket.on('disconnect', (reason) => {
