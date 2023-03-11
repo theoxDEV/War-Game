@@ -63,7 +63,7 @@ function putPiecesOnBoard(countryName) {
     console.log("piecesQuantity", piecesQuantity);
 
     if(typeof countryName == 'undefined') {
-        return;
+        return false;
     }
     
     else if(piecesQuantity > 0) {
@@ -84,12 +84,13 @@ function putPiecesOnBoard(countryName) {
         
         else {
             alert("You can only add troops in your countries");
-            return;
+            return false;
         }
     }
     
     else if(piecesQuantity == 0){
-        socket.emit('set-initial-state', game_const);
+        socket.emit('set-game-state', game_const);
+        return true;
     }
 }
 

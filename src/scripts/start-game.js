@@ -39,11 +39,11 @@ socket.on('create-map', () => {
         i++;
     }
     i = 0;
-    socket.emit('set-initial-state', game);
+    socket.emit('set-game-state', game);
 })
 
 //Room gets map created by admin
-socket.on('get-initial-map', (gameFromServer) => {
+socket.on('get-current-map', (gameFromServer) => {
     
     for(let countryImgElement of allOfWorldCountriesImages) {
         let countryName = countryImgElement.id;

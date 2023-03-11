@@ -1,86 +1,77 @@
 import { hasBorders } from './borders.js';
 import { attackInvasion } from './attack-invasion.js';
+import { socket } from '../client/client.js';
 
-//Establishing a connection with the server on port 5500y
-const socket = io('http://localhost:3000');
+var attackerTroopsTxtElement;
+var attackerImage;
+var defenseTroopsTxtElement;
+var defenseImage;
 
 socket.on('attack-server-to-clients', (attackerObj, defenderObj) => {
-    console.log("Att obj: ", attackerObj);
     attack(attackerObj, defenderObj);
 })
 
-var attackerTroopsSpanId;
-var attackerImage;
-var defenseTroopsSpanId;
-var defenseImage;
-
-function attack(attacker, defender) {
-
-    //Attacker elements
-    var attackerCountryName = attacker.name;
-    var attackerTroopsQuantity = attacker.troopsNumber;
-    attackerImage = document.getElementById(`${attackerCountryName}`);
-    var attackerColor = attackerImage.classList[1];
-    attackerTroopsSpanId = document.getElementById(attackerCountryName + '-troop-number');
-
-    //Defense elements
-    var defenseCountryName = defender.name;
-    var defenseTroopsQuantity = defender.troopsNumber;
-    defenseImage = document.getElementById(`${defenseCountryName}`);
-    var defenseColor = defenseImage.classList[1];
-    defenseTroopsSpanId = document.getElementById(defenseCountryName + '-troop-number');
-
-    var hasBorder = hasBorders(attackerCountryName, defenseCountryName);
-
-    if(!hasBorder) {
-        alert(`${attackerCountryName} cannot attack ${defenseCountryName}`);
-        return ; 
-    }
-
-    else if(attackerColor == defenseColor) {
-        alert("You cannot attack the same color");
-        return ;
-    }
-    
-    else if(attackerTroopsSpanId.innerHTML == 1) {
-        alert("You cannot attack with 1 troop");
-        return ;
-    }
-    
-    socket.emit('battle-to-server', attackerTroopsQuantity, defenseTroopsQuantity);
-
-}
-
 socket.on('update-troops', (battleResult) => {
-    
-    console.log("att losted: " + battleResult.attackLostedTroops);
+
     //Attack cannot lost all of the troops
-    if((attackerTroopsSpanId.innerHTML - battleResult.attackLostedTroops) == 0){
-        attackerTroopsSpanId.innerHTML = 1;
+    if((attackerTroopsTxtElement.innerHTML - battleResult.attackLostedTroops) == 0){
+        attackerTroopsTxtElement.innerHTML = 1;
     }
     
     else {
-        $("#" + attackerTroopsSpanId.id).addClass("animated shake");
-        attackerTroopsSpanId.innerHTML -= battleResult.attackLostedTroops;
+        $("#" + attackerTroopsTxtElement.id).addClass("animated shake");
+        attackerTroopsTxtElement.innerHTML -= battleResult.attackLostedTroops;
     }
     
     
-    $("#" + defenseTroopsSpanId.id).addClass("animated shake");
-    defenseTroopsSpanId.innerHTML -= battleResult.defenseLostedTroops;
+    $("#" + defenseTroopsTxtElement.id).addClass("animated shake");
+    defenseTroopsTxtElement.innerHTML -= battleResult.defenseLostedTroops;
 
     //If defense lost all of troops
     //attackerImage.classList[1] = attacker color to fill defense color
-    if(defenseTroopsSpanId.innerHTML == 0) {
-        attackInvasion(attackerImage, attackerTroopsSpanId, defenseImage, defenseTroopsSpanId);
+    if(defenseTroopsTxtElement.innerHTML == 0) {
+        attackInvasion(attackerImage, attackerTroopsTxtElement, defenseImage, defenseTroopsTxtElement);
     }
 
     //Setting timeout 'cause before of this implementation, class "animated shake" was removed
     //before the animation occurs
     setTimeout(function() {
-        $("#" + attackerTroopsSpanId.id).removeClass("animated shake");
+        $("#" + attackerTroopsTxtElement.id).removeClass("animated shake");
         
-        $("#" + defenseTroopsSpanId.id).removeClass("animated shake");
+        $("#" + defenseTroopsTxtElement.id).removeClass("animated shake");
     }, 1200);
 })
+
+
+function attack(attacker, defender) {
+
+    //Attacker elements
+    attackerImage = document.getElementById(`${attacker.name}`);
+    attackerTroopsTxtElement = document.getElementById(attacker.name + '-troop-number');
+
+    //Defense elements
+    defenseImage = document.getElementById(`${defender.name}`);
+    defenseTroopsTxtElement = document.getElementById(defender.name + '-troop-number');
+
+    var hasBorder = hasBorders(attacker.name, defender.name);
+
+    if(!hasBorder) {
+        alert(`${attacker.name} cannot attack ${defender.name}`);
+        return ; 
+    }
+
+    else if(attacker.color == defender.color) {
+        alert("You cannot attack the same color");
+        return ;
+    }
+    
+    else if(attacker.troopsNumber == 1) {
+        alert("You cannot attack with 1 troop");
+        return ;
+    }
+    
+    socket.emit('battle-to-server', attacker.troopsNumber, defender.troopsNumber);
+
+}
 
 export { attack };

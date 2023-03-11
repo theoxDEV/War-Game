@@ -13,17 +13,20 @@ var countryName;
 var turn = 1;
 /*  1 - Move new pieces on board 
     2 - Attack opponents
-    3 - Move attack pieces in attacked countries
-    4 - Move pieces it already exists
+    2_1 - Move attack pieces in attacked countries
+    3 - Move pieces it already exists
 */
 
 
 $(".countries-images").click(function(e) {
+    console.log("turn: ", turn);
     switch (turn) {
         case 1:
             movePiecesScript(this);
+            break;
         case 2:
             attackScript(this);
+            break;
         default:
             console.log(`Sorry, we are out of ${turn}.`);
     }
@@ -32,7 +35,13 @@ $(".countries-images").click(function(e) {
 
 function movePiecesScript(that) {
     countryName = that.id;
-    putPiecesOnBoard(countryName);
+
+    var piecesOnBoardTurnEnded = putPiecesOnBoard(countryName);
+
+    if(piecesOnBoardTurnEnded) {
+        //Changed to attack turn
+        turn = 2;
+    }
 }
 
 
@@ -46,11 +55,9 @@ function attackScript(that) {
         countriesBattle.push(that);
 
         let attack = countriesBattle[0].id;
-        let defend = countriesBattle[1].id;
+        let defense = countriesBattle[1].id;
 
-        socket.emit('attack-client-to-server', attack, defend);
-        console.log(`${countriesBattle[0].id} // ${countriesBattle[1].id}`);
-        //attack(countriesBattle[0], this);
+        socket.emit('attack-client-to-server', attack, defense);
         
         //Remove all of countries of countriesBattle
         while(countriesBattle.length){

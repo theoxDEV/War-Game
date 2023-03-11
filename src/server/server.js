@@ -15,7 +15,6 @@ const app = express();
 const httpServer = createServer(app);
 
 const game = createGame();
-const countriesObj = {};
 var players = [];
 
 /* TURN BASED*/
@@ -84,7 +83,7 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('set-initial-state', (gameInitialState) => {
+    socket.on('set-game-state', (gameInitialState) => {
         let countries = gameInitialState.state.countries;
 
         const keys = Object.keys(countries);
@@ -99,7 +98,7 @@ io.on('connection', (socket) => {
             })
         });
 
-        io.to(roomId).emit('get-initial-map', game);
+        io.to(roomId).emit('get-current-map', game);
     })
     
 
@@ -111,20 +110,6 @@ io.on('connection', (socket) => {
             resetTimeOut();
             next_turn();
         }
-    })
-
-
-    socket.on('change-country-color', dict => {
-        //Saved in dictionary variable to emit 'map-update' to all clients
-        /*countriesObj[dict.country] = dict.color;
-        io.emit('update-map', dict.country, dict.color, dict.troopsNumber);*/
-        
-        countriesObj[dict.country] = {
-            name: dict.country,
-            color: dict.color,
-            troopsNumber: dict.troopsNumber
-        }
-
     })
 
     socket.on('attack-client-to-server', (attacker, defender) => {
@@ -141,7 +126,7 @@ io.on('connection', (socket) => {
 
         var battleResult = battle(attackerDiceList, defenderDiceList);
 
-        io.emit('update-troops', battleResult);
+        io.to(roomId).emit('update-troops', battleResult);
     })
 
     socket.on('disconnect', (reason) => {
@@ -209,7 +194,6 @@ function diceResults(troopsQuantity) {
 
 
 //Players next turn
-
 function next_turn(){
     var current_player = players[_turn];
     _turn = current_turn++ % players.length;
