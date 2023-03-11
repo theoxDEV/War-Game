@@ -19,8 +19,6 @@ let borders =
 
 function hasBorders(firstCountry, secondCountry) {
 
-    console.log(firstCountry, secondCountry);
-
     //List of all of countries that has a border with the first country
     let firstCountryBordersList = borders[`${firstCountry}`];
     

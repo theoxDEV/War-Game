@@ -19,7 +19,6 @@ var turn = 1;
 
 
 $(".countries-images").click(function(e) {
-    console.log("turn: ", turn);
     switch (turn) {
         case 1:
             movePiecesScript(this);
@@ -56,8 +55,6 @@ function attackScript(that) {
 
         let attack = countriesBattle[0].id;
         let defense = countriesBattle[1].id;
-
-        socket.emit('attack-client-to-server', attack, defense);
         
         //Remove all of countries of countriesBattle
         while(countriesBattle.length){
@@ -67,6 +64,8 @@ function attackScript(that) {
         //Finish attack deselecting the attack country
         //And turn countryHasBeenClicked to false
         countryHasBeenClicked = false;
+
+        socket.emit('attack-client-to-server', attack, defense);
     }
     
     else {

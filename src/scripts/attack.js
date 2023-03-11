@@ -1,37 +1,33 @@
 import { hasBorders } from './borders.js';
-import { attackInvasion } from './attack-invasion.js';
 import { socket } from '../client/client.js';
 
+var attackerName;
 var attackerTroopsTxtElement;
 var attackerImage;
+
+var defenseName;
 var defenseTroopsTxtElement;
 var defenseImage;
 
 socket.on('attack-server-to-clients', (attackerObj, defenderObj) => {
+    
+    console.log("before_att_Attack obj: ", attackerObj);
+    console.log("before_att_defense obj: ", defenderObj);
+    
     attack(attackerObj, defenderObj);
 })
 
-socket.on('update-troops', (battleResult) => {
+socket.on('update-troops', (game) => {
+    var attacker_server_state = game.state.countries[attackerName];
+    var defense_server_state = game.state.countries[defenseName];
 
     //Attack cannot lost all of the troops
-    if((attackerTroopsTxtElement.innerHTML - battleResult.attackLostedTroops) == 0){
-        attackerTroopsTxtElement.innerHTML = 1;
-    }
-    
-    else {
-        $("#" + attackerTroopsTxtElement.id).addClass("animated shake");
-        attackerTroopsTxtElement.innerHTML -= battleResult.attackLostedTroops;
-    }
+    attackerTroopsTxtElement.innerHTML = attacker_server_state.troopsNumber;
+    $("#" + attackerTroopsTxtElement.id).addClass("animated shake");
     
     
     $("#" + defenseTroopsTxtElement.id).addClass("animated shake");
-    defenseTroopsTxtElement.innerHTML -= battleResult.defenseLostedTroops;
-
-    //If defense lost all of troops
-    //attackerImage.classList[1] = attacker color to fill defense color
-    if(defenseTroopsTxtElement.innerHTML == 0) {
-        attackInvasion(attackerImage, attackerTroopsTxtElement, defenseImage, defenseTroopsTxtElement);
-    }
+    defenseTroopsTxtElement.innerHTML = defense_server_state.troopsNumber;
 
     //Setting timeout 'cause before of this implementation, class "animated shake" was removed
     //before the animation occurs
@@ -46,12 +42,16 @@ socket.on('update-troops', (battleResult) => {
 function attack(attacker, defender) {
 
     //Attacker elements
+    attackerName = attacker.name;
     attackerImage = document.getElementById(`${attacker.name}`);
     attackerTroopsTxtElement = document.getElementById(attacker.name + '-troop-number');
 
     //Defense elements
+    defenseName = defender.name;
     defenseImage = document.getElementById(`${defender.name}`);
     defenseTroopsTxtElement = document.getElementById(defender.name + '-troop-number');
+
+    console.log("Attack countries: ", attackerName, "//", defenseName);
 
     var hasBorder = hasBorders(attacker.name, defender.name);
 
@@ -70,7 +70,7 @@ function attack(attacker, defender) {
         return ;
     }
     
-    socket.emit('battle-to-server', attacker.troopsNumber, defender.troopsNumber);
+    socket.emit('battle-to-server', attacker, defender);
 
 }
 
